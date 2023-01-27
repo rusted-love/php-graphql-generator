@@ -4,7 +4,6 @@
     "type": "library",
     "require": {
         "webonyx/graphql-php": "^15.0",
-        "phpdocumentor/type-resolver": "^1.6",
         "php": "^8.2",
         "psr/container": "^2.0",
         "nette/php-generator": "^4.0"
