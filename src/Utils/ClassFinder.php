@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Parser;
+namespace BladL\BestGraphQL\Utils;
 
 use JsonException;
 use UnexpectedValueException;
