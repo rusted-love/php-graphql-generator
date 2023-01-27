@@ -1,0 +1,18 @@
+enum Role {
+    Admin
+    Manager
+    Developer
+}
+type User {
+    id:ID!
+    username:String
+    roles:[Role!]
+}
+type Product {
+    id:ID!
+    title:String!
+    author:User
+}
+type Query {
+    products: [Product!]!
+}
