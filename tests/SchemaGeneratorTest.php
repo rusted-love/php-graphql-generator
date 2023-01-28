@@ -17,10 +17,15 @@ final class SchemaGeneratorTest extends TestCase
     /**
      * @throws SyntaxError
      */
-    public function testSchemaParser(): void
+    public function testSchemaParserValidity(): void
     {
         $schema = ConfigurationFactory::getSchema();
         $schema->assertValid();
-        self::assertEquals('RoleType', $schema->getType('RoleType')?->name());
+        $roleType = $schema->getType('Role');
+        self::assertNotNull($roleType);
+        self::assertEquals('Role', $roleType->name());
+        $userType = $schema->getType('User');
+        self::assertNotNull($userType);
+        self::assertEquals('User',$userType->name());
     }
 }

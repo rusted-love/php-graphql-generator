@@ -14,16 +14,17 @@ final readonly class SerializerCollection
     {
     }
 
-    public function serialize(FieldResolverInfo $info):SerializerCollectionSerializeResult {
+    public function serialize(FieldResolverInfo $info): SerializerCollectionSerializeResult
+    {
         foreach ($this->serializers as $serializer) {
             if ($serializer->supports($info)) {
-                return  new SerializerCollectionSerializeResult(
-                    resultValue:$serializer->serialize($info),usedSerializer: $serializer
+                return new SerializerCollectionSerializeResult(
+                    resultValue: $serializer->serialize($info), usedSerializer: $serializer, resolverInfo: $info
                 );
             }
         }
         return new SerializerCollectionSerializeResult(
-            resultValue: $info->objectValue,usedSerializer: null
+            resultValue: $info->objectValue, usedSerializer: null, resolverInfo: $info
         );
     }
 }

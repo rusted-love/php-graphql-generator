@@ -7,7 +7,8 @@ final readonly class SerializerCollectionSerializeResult
 {
     public function __construct(
         public mixed               $resultValue,
-        public ?SerializerInterface $usedSerializer
+        public ?SerializerInterface $usedSerializer,
+        public FieldResolverInfo $resolverInfo
     )
     {
     }

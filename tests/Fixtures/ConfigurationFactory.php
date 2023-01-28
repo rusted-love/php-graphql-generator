@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace BladL\BestGraphQL\Tests\Fixtures;
 
+use BladL\BestGraphQL\Debugger\SchemaResolverListener;
 use BladL\BestGraphQL\SchemaExecutor;
 use BladL\BestGraphQL\SchemaGenerator;
 use BladL\BestGraphQL\SchemaResolverConfig;
@@ -16,11 +17,12 @@ final readonly class ConfigurationFactory
     /**
      * @throws SyntaxError
      */
-    public static function getSchemaExecutor(): SchemaExecutor
+    public static function getSchemaExecutor(?SchemaResolverListener $resolverListener = null): SchemaExecutor
     {
-        return new SchemaExecutor(self::getSchema(), schemaResolverConfig: self::getSchemaResolverConfig());
+        return new SchemaExecutor(self::getSchema(), schemaResolverConfig: self::getSchemaResolverConfig(), resolverListener: $resolverListener);
 
     }
+
     public const CACHE_FILE_PATH = '/tests/schema_test_output.php';
     public const SCHEMA_PATH = '/tests/schema_test.graphql';
 
