@@ -14,5 +14,5 @@ type Product {
     author:User
 }
 type Query {
-    products: [Product!]!
+    products(searchString:String): [Product!]!
 }

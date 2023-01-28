@@ -24,7 +24,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "BladL\\Tests\\": "tests/"
+            "BladL\\BestGraphQL\\Tests\\": "tests/"
         }
     },
     "authors": [

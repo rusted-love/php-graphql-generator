@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace BladL\Tests;
+namespace BladL\BestGraphQL\Tests;
 
 use function dirname;
 

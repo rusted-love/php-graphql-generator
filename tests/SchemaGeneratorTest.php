@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace BladL\Tests;
+namespace BladL\BestGraphQL\Tests;
 
 use BladL\BestGraphQL\SchemaGenerator;
 use GraphQL\Error\SyntaxError;
@@ -12,7 +12,7 @@ use UnexpectedValueException;
 final class SchemaGeneratorTest extends TestCase
 {
     public const CACHE_FILE_PATH = '/tests/schema-output-cache.php';
-    public const SCHEMA_PATH = '/tests/schema_fixture.graphql';
+    public const SCHEMA_PATH = '/tests/schema.test.graphql';
 
     /**
      * @throws SyntaxError
@@ -34,6 +34,6 @@ final class SchemaGeneratorTest extends TestCase
     {
         $schema = self::getSchema();
         $schema->assertValid();
-        self::assertEquals('Role', $schema->getType('Role')?->name());
+        self::assertEquals('RoleType', $schema->getType('RoleType')?->name());
     }
 }
