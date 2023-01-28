@@ -5,6 +5,7 @@ namespace BladL\BestGraphQL\Tests\SerializerTests;
 
 use BladL\BestGraphQL\Debugger\SchemaResolverListener;
 use BladL\BestGraphQL\Serializer\SerializerCollectionSerializeResult;
+use BladL\BestGraphQL\Tests\Fixtures\GraphQL\Types\RoleEnum;
 use BladL\BestGraphQL\Tests\Queries\QueryExample;
 use BladL\BestGraphQL\Tests\Fixtures\ConfigurationFactory;
 use BladL\BestGraphQL\Tests\SchemaExecutionTest;
@@ -30,5 +31,14 @@ final class SerializersTest extends TestCase
         }
         self::assertNotNull($productLog);
         self::assertEquals('product_1', $productLog->resultValue);
+        $roleEnumLog = null;
+        foreach ($listener->log as $item) {
+            $info = $item->resolverInfo->objectValue;
+            if ($info instanceof \UnitEnum) {
+                $roleEnumLog = $item;
+            }
+        }
+        self::assertNotNull($roleEnumLog,'Role was not serialized');
+        self::assertEquals('Admin',$roleEnumLog->resultValue);
     }
 }
