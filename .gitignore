@@ -2,4 +2,4 @@ composer.phar
 /vendor/
 .phpunit.result.cache
 .idea
-/tests/schema-output-cache.php
+/tests/schema_test_output.php
