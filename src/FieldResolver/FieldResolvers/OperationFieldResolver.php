@@ -7,6 +7,7 @@ use BladL\BestGraphQL\Exception\ResolverException;
 use BladL\BestGraphQL\FieldResolver\FieldResolverInfo;
 use BladL\BestGraphQL\FieldResolver\FieldResolverAbstract;
 use function call_user_func_array;
+
 /**
  * @internal
  */
@@ -26,12 +27,13 @@ final readonly class OperationFieldResolver extends FieldResolverAbstract
     {
         $fieldName = $info->getFieldName();
         $parentTypeName = $info->getParentTypeName();
-        $class = $this->schemaResolverConfig->operationConfig->getResolverClass(operationName: $parentTypeName,fieldName: $fieldName);
-if ($class === null ) {
-    throw new ResolverException("Class for $parentTypeName not exist");
-}
+        $class = $this->schemaResolverConfig->operationConfig->getResolverClass(operationName: $parentTypeName, fieldName: $fieldName);
+        if (null === $class) {
+            throw new ResolverException("Class for $parentTypeName not exist");
+        }
         \assert(\class_exists($class));
-        $resolver = $this->autoWireClass($class);
+        $resolver = $this->schemaResolverConfig->getAutoWired($class);
+        \assert(\is_object($resolver));
         if (method_exists($resolver, 'resolve')) {
             return call_user_func_array([$resolver, 'resolve'], $info->args);
         }

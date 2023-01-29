@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace BladL\BestGraphQL\Tests;
 
+use BladL\BestGraphQL\Exception\ResolverException;
 use BladL\BestGraphQL\Tests\Fixtures\GraphQL\Types\RoleEnum;
 use BladL\BestGraphQL\Tests\Queries\QueryExample;
 use BladL\BestGraphQL\Tests\Fixtures\ConfigurationFactory;
@@ -14,11 +15,12 @@ final class SchemaExecutionTest extends TestCase
 
     /**
      * @throws SyntaxError
+     * @throws ResolverException
      */
     public function testProductAuthorRolesResult(): void
     {
         $result = ConfigurationFactory::executeQuery(query: QueryExample::BasicProducts->value, variables: null);
-
+        self::assertNull($result->errors[0]??null);
         self::assertNotNull($result->data,'No data returned');
         $products = $result->data['products']??null;
         self::assertNotNull($products,'Bad result');

@@ -12,10 +12,30 @@ use BladL\Time\TimeInterval;
 use GraphQL\Error\SyntaxError;
 use GraphQL\Executor\ExecutionResult;
 use GraphQL\Type\Schema;
+use Psr\Container\ContainerInterface;
 use UnexpectedValueException;
 
 final readonly class ConfigurationFactory
 {
+
+    public static function getGraphQLService(SchemaResolverListener $resolverListener = null): GraphQLService
+    {
+        $container = new class implements ContainerInterface {
+
+            public function get(string $id): null
+            {
+                return null;
+            }
+
+            public function has(string $id): bool
+            {
+
+                return false;
+            }
+        };
+        return new GraphQLService(schemaPath: Directories::getPathFromRoot(self::SCHEMA_PATH), cacheFilePath: Directories::getPathFromRoot(self::CACHE_FILE_PATH), namespace: '\BladL\BestGraphQL\Tests\Fixtures\GraphQL', container: $container, cacheLifeTime: TimeInterval::second(), debugResolverListener: $resolverListener);
+
+    }
 
     /**
      * @param array<string,mixed>|null $variables
@@ -24,8 +44,7 @@ final readonly class ConfigurationFactory
      */
     public static function executeQuery(string $query, ?array $variables, SchemaResolverListener $resolverListener = null): ExecutionResult
     {
-        $service = new GraphQLService(schemaPath: Directories::getPathFromRoot(self::SCHEMA_PATH), cacheFilePath: Directories::getPathFromRoot(self::CACHE_FILE_PATH), namespace: '\BladL\BestGraphQL\Tests\Fixtures\GraphQL', cacheLifeTime: TimeInterval::second(), debugResolverListener: $resolverListener);
-        return $service->executeQuery(query: $query, variables: $variables);
+        return self::getGraphQLService(resolverListener: $resolverListener)->executeQuery(query: $query, variables: $variables);
     }
 
     public const CACHE_FILE_PATH = '/tests/schema_test_output.php';

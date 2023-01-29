@@ -20,15 +20,6 @@ abstract readonly class FieldResolverAbstract implements FieldResolverInterface
     public function __construct(protected SchemaResolverConfig $schemaResolverConfig)
     {
     }
-    /**
-     * @template  T of object
-     * @param class-string<T> $class
-     * @return T
-     */
-    protected function autoWireClass(string $class): object
-    {
-        return new $class();
-    }
 
     abstract protected function proceedSerialize(FieldResolverInfo $info): mixed;
 

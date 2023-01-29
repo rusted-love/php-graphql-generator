@@ -19,6 +19,6 @@ final  readonly class OperationConfig
 
     public function getResolverClass(string $operationName, string $fieldName): string|null
     {
-        return $this->resolverNamespaces->getRealClass(ucfirst($fieldName) . $operationName . $this->resolverPrefix);
+        return $this->resolverNamespaces->getRealClass(ucfirst($fieldName) . $operationName  .$this->resolverPrefix);
     }
 }
