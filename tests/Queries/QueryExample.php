@@ -15,4 +15,34 @@ query test1 {
     }
 }
 GRAPHQL;
+    case ProductSearchString = <<<GRAPHQL
+query test1(\$search:String!) {
+    products(searchString:\$search) {
+        id
+        author {
+           roles
+        }
+    }
+}
+GRAPHQL;
+    case WrongProductFields = <<<GRAPHQL
+query test2 {
+    products {
+        ide
+        author {
+           roles
+        }
+    }
+}
+GRAPHQL;
+    case WrongArguments = <<<GRAPHQL
+query test2 {
+    products(searchStrings:"best shoes") {
+        id
+        author {
+           roles
+        }
+    }
+}
+GRAPHQL;
 }

@@ -33,4 +33,5 @@ final class SchemaExecutionTest extends TestCase
         self::assertIsArray($roles,'roles field should be list of strings');
         self::assertEquals('Admin',$roles[0]??null);
     }
+
 }

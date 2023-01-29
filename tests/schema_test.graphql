@@ -15,4 +15,30 @@ type Product {
 }
 type Query {
     products(searchString:String): [Product!]!
+    productById(id:ID!):Product!
+}
+input ProductInput {
+    id:ID!
+}
+enum Currency {
+    USD
+    EUR
+    UAH
+    Bitcoin
+}
+input MoneyInput {
+    currency:Currency
+}
+input ProductDataInput {
+    title:String
+    price:MoneyInput
+
+}
+directive @access(roles: [Role!]!) on FIELD_DEFINITION
+
+type Mutation {
+
+    updateProduct(product:ProductInput!,data:ProductDataInput!): Product!   @access(roles: [Manager])
+
+    createProduct(data:ProductDataInput!):Product! @access(roles: [Admin])
 }

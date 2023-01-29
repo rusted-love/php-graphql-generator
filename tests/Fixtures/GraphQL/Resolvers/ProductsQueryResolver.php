@@ -15,7 +15,7 @@ final readonly class ProductsQueryResolver
      */
     public function resolve(string $searchString = null):array{
 
-        return [new ProductType()];
+        return [new ProductType('product_1')];
     }
 
 }
