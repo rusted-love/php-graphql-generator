@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace BladL\BestGraphQL\Tests;
 
-use BladL\BestGraphQL\SchemaGenerator;
+use BladL\BestGraphQL\SchemaFactory;
 use BladL\BestGraphQL\Tests\Fixtures\ConfigurationFactory;
 use GraphQL\Error\SyntaxError;
 use GraphQL\Type\Schema;

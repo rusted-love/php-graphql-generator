@@ -6,18 +6,20 @@ namespace BladL\BestGraphQL\FieldResolver;
 
 use BladL\BestGraphQL\Exception\ResolverException;
 use BladL\BestGraphQL\SchemaResolverConfig;
+use function array_is_list;
+use function gettype;
+use function is_array;
+use function is_bool;
+use function is_float;
+use function is_int;
+use function is_object;
+use function is_string;
 
 abstract readonly class FieldResolverAbstract implements FieldResolverInterface
 {
-    public function __construct(private SchemaResolverConfig $schemaResolverConfig)
+    public function __construct(protected SchemaResolverConfig $schemaResolverConfig)
     {
     }
-
-    protected function getSchemaResolverConfig(): SchemaResolverConfig
-    {
-        return $this->schemaResolverConfig;
-    }
-
     /**
      * @template  T of object
      * @param class-string<T> $class
@@ -26,11 +28,6 @@ abstract readonly class FieldResolverAbstract implements FieldResolverInterface
     protected function autoWireClass(string $class): object
     {
         return new $class();
-    }
-
-    protected function getNamespace(): string
-    {
-        return $this->schemaResolverConfig->namespace;
     }
 
     abstract protected function proceedSerialize(FieldResolverInfo $info): mixed;
@@ -45,7 +42,7 @@ abstract readonly class FieldResolverAbstract implements FieldResolverInterface
         }
         $value = $this->proceedSerialize($info);
         if (!$this->isFinalValue($value)) {
-            throw new ResolverException('Result of type ' . \gettype($value) . ' from serializer ' . static::class . ' is not final. Field ' . $info->getFieldName());
+            throw new ResolverException('Result of type ' . gettype($value) . ' from serializer ' . static::class . ' is not final. Field ' . $info->getFieldName());
         }
         return $value;
     }
@@ -56,7 +53,7 @@ abstract readonly class FieldResolverAbstract implements FieldResolverInterface
      */
     private function isArrayFinalValue(array $value): bool
     {
-        if (!\array_is_list($value)) {
+        if (!array_is_list($value)) {
             throw new ResolverException('Only list array value aeupported ');
         }
         foreach ($value as $item) {
@@ -67,13 +64,16 @@ abstract readonly class FieldResolverAbstract implements FieldResolverInterface
         return true;
     }
 
+    /**
+     * @throws ResolverException
+     */
     private function isFinalValue(mixed $value): bool
     {
-        if (\is_array($value)) {
+        if (is_array($value)) {
 
             return $this->isArrayFinalValue($value);
         }
-        return \is_int($value) || \is_float($value) || \is_string($value) || \is_bool($value) || (\is_object($value) && $this->getSchemaResolverConfig()->classIsType($value::class));
+        return is_int($value) || is_float($value) || is_string($value) || is_bool($value) || (is_object($value) && $this->schemaResolverConfig->typesConfig->classIsType($value::class));
     }
 
 

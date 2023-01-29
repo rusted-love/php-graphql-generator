@@ -4,30 +4,35 @@ declare(strict_types=1);
 namespace BladL\BestGraphQL\Tests\Fixtures;
 
 use BladL\BestGraphQL\Debugger\SchemaResolverListener;
-use BladL\BestGraphQL\SchemaExecutor;
-use BladL\BestGraphQL\SchemaGenerator;
-use BladL\BestGraphQL\SchemaResolverConfig;
+use BladL\BestGraphQL\Exception\ResolverException;
+use BladL\BestGraphQL\GraphQLService;
+use BladL\BestGraphQL\SchemaFactory;
 use BladL\BestGraphQL\Tests\Directories;
+use BladL\Time\TimeInterval;
 use GraphQL\Error\SyntaxError;
+use GraphQL\Executor\ExecutionResult;
 use GraphQL\Type\Schema;
 use UnexpectedValueException;
 
 final readonly class ConfigurationFactory
 {
+
     /**
+     * @param array<string,mixed>|null $variables
+     * @throws ResolverException
      * @throws SyntaxError
      */
-    public static function getSchemaExecutor(?SchemaResolverListener $resolverListener = null): SchemaExecutor
+    public static function executeQuery(string $query, ?array $variables, SchemaResolverListener $resolverListener = null): ExecutionResult
     {
-        return new SchemaExecutor(self::getSchema(), schemaResolverConfig: self::getSchemaResolverConfig(), resolverListener: $resolverListener);
-
+        $service = new GraphQLService(schemaPath: Directories::getPathFromRoot(self::SCHEMA_PATH), cacheFilePath: Directories::getPathFromRoot(self::CACHE_FILE_PATH), namespace: '\BladL\BestGraphQL\Tests\Fixtures\GraphQL', cacheLifeTime: TimeInterval::second(), debugResolverListener: $resolverListener);
+        return $service->executeQuery(query: $query, variables: $variables);
     }
 
     public const CACHE_FILE_PATH = '/tests/schema_test_output.php';
     public const SCHEMA_PATH = '/tests/schema_test.graphql';
 
     /**
-     * @throws SyntaxError
+     * @throws SyntaxError|ResolverException
      */
     public static function getSchema(): Schema
     {
@@ -35,13 +40,8 @@ final readonly class ConfigurationFactory
         if (false === $schemaContent) {
             throw new UnexpectedValueException('No schema fixture');
         }
-        $generator = new SchemaGenerator(schema: $schemaContent, cacheFilePath: Directories::getPathFromRoot(self::CACHE_FILE_PATH));
+        $generator = new SchemaFactory(schemaPath: $schemaContent, cacheFilePath: Directories::getPathFromRoot(self::CACHE_FILE_PATH));
         return $generator->parseSchema();
-    }
-
-    public static function getSchemaResolverConfig(): SchemaResolverConfig
-    {
-        return new SchemaResolverConfig(namespace: '\BladL\BestGraphQL\Tests\Fixtures\GraphQL');
     }
 
 }

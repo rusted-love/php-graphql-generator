@@ -7,7 +7,8 @@ use function dirname;
 
 final class Directories
 {
-public static function getPathFromRoot(string $path):string {
-    return dirname(__DIR__).$path;
-}
+    public static function getPathFromRoot(string $path): string
+    {
+        return dirname(__DIR__) . $path;
+    }
 }

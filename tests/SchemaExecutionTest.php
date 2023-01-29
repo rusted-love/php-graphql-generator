@@ -17,7 +17,7 @@ final class SchemaExecutionTest extends TestCase
      */
     public function testProductAuthorRolesResult(): void
     {
-        $result = ConfigurationFactory::getSchemaExecutor()->executeSchema(queryString: QueryExample::BasicProducts->value, variables: null);
+        $result = ConfigurationFactory::executeQuery(query: QueryExample::BasicProducts->value, variables: null);
 
         self::assertNotNull($result->data,'No data returned');
         $products = $result->data['products']??null;

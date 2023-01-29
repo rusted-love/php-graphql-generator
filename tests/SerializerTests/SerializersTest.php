@@ -17,8 +17,8 @@ final class SerializersTest extends TestCase
     public function testProductFixtureSerializer(): void
     {
         $listener = new SimpleResolverListener();
-        ConfigurationFactory::getSchemaExecutor(resolverListener: $listener)->executeSchema(
-            queryString: QueryExample::BasicProducts->value, variables: null
+        ConfigurationFactory::executeQuery(
+            query: QueryExample::BasicProducts->value, variables: null,resolverListener:$listener
         );
 
         $productLog = null;

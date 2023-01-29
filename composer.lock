@@ -4,8 +4,58 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cc39d106163f09debe0452ee0075ae93",
+    "content-hash": "29164dc1a51b2f24835b88b241e7a4f4",
     "packages": [
+        {
+            "name": "bladl/time",
+            "version": "v0.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/bladl/php-time.git",
+                "reference": "ce690d12e3b57cc6066a69b2e326cfc325a3a92d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/bladl/php-time/zipball/ce690d12e3b57cc6066a69b2e326cfc325a3a92d",
+                "reference": "ce690d12e3b57cc6066a69b2e326cfc325a3a92d",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "ext-json": "*",
+                "php": ">=8.1"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": ">=2.18",
+                "phpstan/phpstan": "^1.8",
+                "phpunit/phpunit": "^9.5",
+                "vimeo/psalm": ">=4.6"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "BladL\\Time\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "BladL"
+                }
+            ],
+            "description": "PHP built-in DateTime classes alternative. Strict types, no exceptions and latest PHP 8.1 features.",
+            "keywords": [
+                "PHP Date Time"
+            ],
+            "support": {
+                "issues": "https://github.com/bladl/php-time/issues",
+                "source": "https://github.com/bladl/php-time/tree/v0.0.1"
+            },
+            "time": "2023-01-29T16:17:57+00:00"
+        },
         {
             "name": "nette/php-generator",
             "version": "v4.0.5",

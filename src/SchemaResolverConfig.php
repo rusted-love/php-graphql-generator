@@ -3,20 +3,22 @@ declare(strict_types=1);
 
 namespace BladL\BestGraphQL;
 
+use BladL\BestGraphQL\Configuration\OperationConfig;
+use BladL\BestGraphQL\Configuration\TypesConfig;
 use BladL\BestGraphQL\FieldResolver\FieldResolverCollection;
 use BladL\BestGraphQL\FieldResolver\FieldResolvers\TypeObjectFieldResolver;
 use BladL\BestGraphQL\FieldResolver\FieldResolvers\OperationFieldResolver;
 
+/**
+ * @internal
+ */
 final readonly class SchemaResolverConfig
 {
-    public string $namespace;
-    private const TYPE_PREFIX = 'Type';
-
     public function __construct(
-        string $namespace
+        public TypesConfig $typesConfig,
+        public OperationConfig $operationConfig
     )
     {
-        $this->namespace = Utils::normalizeNamespace($namespace);
     }
 
     public function getRootSerializers(): FieldResolverCollection
@@ -27,22 +29,4 @@ final readonly class SchemaResolverConfig
         );
     }
 
-    private function getTypesNamespace(): string
-    {
-        return $this->namespace . 'Types\\';
-    }
-
-    public function classIsType(string $class): bool
-    {
-        return str_starts_with($class, $this->getTypesNamespace()) && str_ends_with($class,self::TYPE_PREFIX);
-    }
-
-    public function getTypeClassByName(string $name): string|null
-    {
-        $class = $this->getTypesNamespace() . $name . 'Type';
-        if (class_exists($class)) {
-            return $class;
-        }
-        return null;
-    }
 }

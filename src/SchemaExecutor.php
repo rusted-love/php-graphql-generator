@@ -9,7 +9,9 @@ use GraphQL\Executor\ExecutionResult;
 use GraphQL\GraphQL;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Schema;
-
+/**
+ * @internal
+ */
 final readonly class SchemaExecutor
 {
     public function __construct(private Schema                  $schema, private SchemaResolverConfig $schemaResolverConfig,

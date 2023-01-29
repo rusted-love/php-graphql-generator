@@ -4,7 +4,9 @@ declare(strict_types=1);
 namespace BladL\BestGraphQL;
 
 use function is_array;
-
+/**
+ * @internal
+ */
 final readonly class Utils
 {
     public static function normalizeNamespace(string $namespace):string {

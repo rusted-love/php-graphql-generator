@@ -2,7 +2,9 @@
 declare(strict_types=1);
 
 namespace BladL\BestGraphQL\FieldResolver;
-
+/**
+ * @internal
+ */
 final readonly class FieldResolverCollection
 {
     /**

@@ -13,18 +13,17 @@ use function call_user_func_array;
 use function is_callable;
 use function is_object;
 
+/**
+ * @internal
+ */
 final readonly class TypeObjectFieldResolver extends FieldResolverAbstract
 {
 
     public function supports(FieldResolverInfo $info): bool
     {
-        return is_object($info->objectValue) && $this->isTypeExists($info->getParentTypeName()) ;
+        return is_object($info->objectValue) && $this->schemaResolverConfig->typesConfig->isTypeClassExists($info->getParentTypeName());
     }
 
-    private function isTypeExists(string $typeName): bool
-    {
-        return null !== $this->getSchemaResolverConfig()->getTypeClassByName($typeName);
-    }
     /**
      * @throws ResolverException
      */
@@ -46,14 +45,15 @@ final readonly class TypeObjectFieldResolver extends FieldResolverAbstract
         return $this->formatArray($value);
     }
 
-    private function formatArray(mixed $value):mixed {
+    private function formatArray(mixed $value): mixed
+    {
         if (Utils::valueIsList($value)) {
-            $value =  array_map(static function(mixed $item){
+            $value = array_map(static function (mixed $item) {
                 if ($item instanceof UnitEnum) {
                     return $item->name;
                 }
                 return $item;
-            },$value);
+            }, $value);
         }
         return $value;
     }
