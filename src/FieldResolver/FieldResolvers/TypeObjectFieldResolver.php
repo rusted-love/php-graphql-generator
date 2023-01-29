@@ -1,24 +1,30 @@
 <?php
 declare(strict_types=1);
 
-namespace BladL\BestGraphQL\Serializer\Serializers;
+namespace BladL\BestGraphQL\FieldResolver\FieldResolvers;
 
 use BladL\BestGraphQL\Exception\ResolverException;
-use BladL\BestGraphQL\Serializer\FieldResolverInfo;
-use BladL\BestGraphQL\Serializer\SerializerAbstract;
+use BladL\BestGraphQL\FieldResolver\FieldResolverInfo;
+use BladL\BestGraphQL\FieldResolver\FieldResolverAbstract;
+use BladL\BestGraphQL\Utils;
+use UnitEnum;
 use function assert;
 use function call_user_func_array;
 use function is_callable;
 use function is_object;
 
-final readonly class ObjectSerializer extends SerializerAbstract
+final readonly class TypeObjectFieldResolver extends FieldResolverAbstract
 {
 
     public function supports(FieldResolverInfo $info): bool
     {
-        return is_object($info->objectValue);
+        return is_object($info->objectValue) && $this->isTypeExists($info->getParentTypeName()) ;
     }
 
+    private function isTypeExists(string $typeName): bool
+    {
+        return null !== $this->getSchemaResolverConfig()->getTypeClassByName($typeName);
+    }
     /**
      * @throws ResolverException
      */
@@ -37,6 +43,18 @@ final readonly class ObjectSerializer extends SerializerAbstract
             throw new ResolverException("Field $fieldName not found in " . $value::class);
         }
 
+        return $this->formatArray($value);
+    }
+
+    private function formatArray(mixed $value):mixed {
+        if (Utils::valueIsList($value)) {
+            $value =  array_map(static function(mixed $item){
+                if ($item instanceof UnitEnum) {
+                    return $item->name;
+                }
+                return $item;
+            },$value);
+        }
         return $value;
     }
 }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace BladL\BestGraphQL;
 
 use BladL\BestGraphQL\Debugger\SchemaResolverListener;
-use BladL\BestGraphQL\Serializer\FieldResolverInfo;
+use BladL\BestGraphQL\FieldResolver\FieldResolverInfo;
 use GraphQL\Executor\ExecutionResult;
 use GraphQL\GraphQL;
 use GraphQL\Type\Definition\ResolveInfo;

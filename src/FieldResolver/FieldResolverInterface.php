@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace BladL\BestGraphQL\Serializer;
+namespace BladL\BestGraphQL\FieldResolver;
 
-interface SerializerInterface
+interface FieldResolverInterface
 {
 
     public function supports(FieldResolverInfo $info):bool;

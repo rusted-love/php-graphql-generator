@@ -1,20 +1,20 @@
 <?php
 declare(strict_types=1);
 
-namespace BladL\BestGraphQL\Serializer\Serializers;
+namespace BladL\BestGraphQL\FieldResolver\FieldResolvers;
 
 use BladL\BestGraphQL\Exception\ResolverException;
-use BladL\BestGraphQL\Serializer\FieldResolverInfo;
-use BladL\BestGraphQL\Serializer\SerializerAbstract;
+use BladL\BestGraphQL\FieldResolver\FieldResolverInfo;
+use BladL\BestGraphQL\FieldResolver\FieldResolverAbstract;
 use function call_user_func_array;
 
-final readonly class OperationSerializer extends SerializerAbstract
+final readonly class OperationFieldResolver extends FieldResolverAbstract
 {
 
     public function supports(FieldResolverInfo $info): bool
     {
         $parentTypeName = $info->getParentTypeName();
-        return 'Query' === $parentTypeName || 'Mutation' === $parentTypeName;
+        return 'Query' === $parentTypeName || 'Mutation' === $parentTypeName || 'Subscription' === $parentTypeName;
     }
 
     /**

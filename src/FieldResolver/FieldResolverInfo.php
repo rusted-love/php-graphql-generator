@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace BladL\BestGraphQL\Serializer;
+namespace BladL\BestGraphQL\FieldResolver;
 
 use GraphQL\Type\Definition\ResolveInfo;
 

@@ -3,19 +3,19 @@
 namespace BladL\BestGraphQL\Tests\SerializerTests;
 
 use BladL\BestGraphQL\Debugger\SchemaResolverListener;
-use BladL\BestGraphQL\Serializer\SerializerCollectionSerializeResult;
+use BladL\BestGraphQL\FieldResolver\FieldResolverResult;
 
 final class SimpleResolverListener implements SchemaResolverListener
 {
     /**
-     * @var SerializerCollectionSerializeResult[]
+     * @var FieldResolverResult[]
      */
     public array $log = [];
     public function __construct()
     {
     }
 
-    public function onSerialized(SerializerCollectionSerializeResult $result): void
+    public function onSerialized(FieldResolverResult $result): void
     {
         $this->log[] = $result;
     }
