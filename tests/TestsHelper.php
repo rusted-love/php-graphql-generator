@@ -5,7 +5,7 @@ namespace BladL\BestGraphQL\Tests;
 
 use BladL\BestGraphQL\Debugger\SchemaResolverListener;
 use BladL\BestGraphQL\Exception\ResolverException;
-use BladL\BestGraphQL\GraphQLService;
+use BladL\BestGraphQL\StandardGraphQLServer;
 use BladL\BestGraphQL\SchemaFactory;
 use BladL\Time\TimeInterval;
 use GraphQL\Error\SyntaxError;
@@ -17,7 +17,7 @@ use UnexpectedValueException;
 final readonly class TestsHelper
 {
 
-    public static function getGraphQLService(SchemaResolverListener $resolverListener = null): GraphQLService
+    public static function getGraphQLService(SchemaResolverListener $resolverListener = null): StandardGraphQLServer
     {
         $container = new class implements ContainerInterface {
 
@@ -32,7 +32,7 @@ final readonly class TestsHelper
                 return false;
             }
         };
-        return new GraphQLService(schemaPath: Directories::getPathFromRoot(self::SCHEMA_PATH), cacheFilePath: Directories::getPathFromRoot(self::CACHE_FILE_PATH), namespace: '\BladL\BestGraphQL\Tests\Fixtures\GraphQL', container: $container, cacheLifeTime: TimeInterval::second(), debugResolverListener: $resolverListener);
+        return new StandardGraphQLServer(schemaPath: Directories::getPathFromRoot(self::SCHEMA_PATH), cacheFilePath: Directories::getPathFromRoot(self::CACHE_FILE_PATH), namespace: '\BladL\BestGraphQL\Tests\Fixtures\GraphQL', container: $container, cacheLifeTime: TimeInterval::second(), debugResolverListener: $resolverListener);
 
     }
 

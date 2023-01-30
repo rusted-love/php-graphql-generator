@@ -12,7 +12,7 @@ use GraphQL\Error\SyntaxError;
 use GraphQL\Executor\ExecutionResult;
 use Psr\Container\ContainerInterface;
 
-final readonly class GraphQLService
+final readonly class StandardGraphQLServer
 {
     private const TYPES_SUB_NAMESPACE = 'Types\\';
     private const OPERATION_RESOLVER_SUB_NAMESPACE = 'Resolvers\\';
