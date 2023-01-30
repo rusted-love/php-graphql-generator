@@ -3,12 +3,8 @@ declare(strict_types=1);
 
 namespace BladL\BestGraphQL\Tests\SerializerTests;
 
-use BladL\BestGraphQL\Debugger\SchemaResolverListener;
-use BladL\BestGraphQL\FieldResolver\FieldResolverResult;
-use BladL\BestGraphQL\Tests\Fixtures\GraphQL\Types\RoleEnum;
-use BladL\BestGraphQL\Tests\Queries\QueryExample;
 use BladL\BestGraphQL\Tests\Fixtures\ConfigurationFactory;
-use BladL\BestGraphQL\Tests\SchemaExecutionTest;
+use BladL\BestGraphQL\Tests\QueryForTesting;
 use PHPUnit\Framework\TestCase;
 
 final class SerializersTest extends TestCase
@@ -18,7 +14,7 @@ final class SerializersTest extends TestCase
     {
         $listener = new SimpleResolverListener();
        $result =  ConfigurationFactory::executeQuery(
-            query: QueryExample::BasicProducts->value, variables: null,resolverListener:$listener
+            query: QueryForTesting::BasicProducts, variables: null,resolverListener:$listener
         );
        self::assertCount(0,$result->errors);
 

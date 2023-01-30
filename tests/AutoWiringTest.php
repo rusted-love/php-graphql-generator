@@ -3,12 +3,9 @@ declare(strict_types=1);
 
 namespace BladL\BestGraphQL\Tests;
 
-use BladL\BestGraphQL\Debugger\SchemaResolverListener;
 use BladL\BestGraphQL\Exception\ResolverException;
-use BladL\BestGraphQL\FieldResolver\FieldResolverResult;
 use BladL\BestGraphQL\Tests\Fixtures\ConfigurationFactory;
 use BladL\BestGraphQL\Tests\Fixtures\GraphQL\Resolvers\ProductsQueryResolver;
-use BladL\BestGraphQL\Tests\Queries\QueryExample;
 use PHPUnit\Framework\TestCase;
 
 final class AutoWiringTest extends TestCase
@@ -31,7 +28,7 @@ final class AutoWiringTest extends TestCase
 
     public function testMethodAutoWiring(): void
     {
-        $result = ConfigurationFactory::executeQuery(query: QueryExample::ProductWithVariants->value, variables: [
+        $result = ConfigurationFactory::executeQuery(query: QueryForTesting::ProductWithVariants, variables: [
             'available' => false
         ]);
         $data = $result->data;
@@ -47,7 +44,7 @@ final class AutoWiringTest extends TestCase
     }
 
     public function testInvalidReturnedValue():void {
-        $result = ConfigurationFactory::executeQuery(query: QueryExample::ProductWithVariantsWrongReturnValue->value, variables: [
+        $result = ConfigurationFactory::executeQuery(query: QueryForTesting::ProductWithVariantsWrongReturnValue, variables: [
             'available' => false
         ]);
         self::assertCount(1, $result->errors);

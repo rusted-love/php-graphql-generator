@@ -8,6 +8,7 @@ use BladL\BestGraphQL\Exception\ResolverException;
 use BladL\BestGraphQL\GraphQLService;
 use BladL\BestGraphQL\SchemaFactory;
 use BladL\BestGraphQL\Tests\Directories;
+use BladL\BestGraphQL\Tests\QueryForTesting;
 use BladL\Time\TimeInterval;
 use GraphQL\Error\SyntaxError;
 use GraphQL\Executor\ExecutionResult;
@@ -39,12 +40,14 @@ final readonly class ConfigurationFactory
 
     /**
      * @param array<string,mixed>|null $variables
-     * @throws ResolverException
-     * @throws SyntaxError
      */
-    public static function executeQuery(string $query, ?array $variables, SchemaResolverListener $resolverListener = null): ExecutionResult
+    public static function executeQuery(QueryForTesting $query, ?array $variables, SchemaResolverListener $resolverListener = null): ExecutionResult
     {
-        return self::getGraphQLService(resolverListener: $resolverListener)->executeQuery(query: $query, variables: $variables);
+        try {
+            return self::getGraphQLService(resolverListener: $resolverListener)->executeQuery(query: $query->value, variables: $variables);
+        } catch (ResolverException|SyntaxError $e) {
+            throw new UnexpectedValueException($e->getMessage(),previous: $e);
+        }
     }
 
     public const CACHE_FILE_PATH = '/tests/schema_test_output.php';
