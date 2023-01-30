@@ -1,14 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace BladL\BestGraphQL\Tests;
+namespace BladL\BestGraphQL\Tests\EndToEnd;
 
-use BladL\BestGraphQL\SchemaFactory;
-use BladL\BestGraphQL\Tests\Fixtures\ConfigurationFactory;
+use BladL\BestGraphQL\Tests\TestsHelper;
 use GraphQL\Error\SyntaxError;
-use GraphQL\Type\Schema;
 use PHPUnit\Framework\TestCase;
-use UnexpectedValueException;
 
 final class SchemaGeneratorTest extends TestCase
 {
@@ -19,7 +16,7 @@ final class SchemaGeneratorTest extends TestCase
      */
     public function testSchemaParserValidity(): void
     {
-        $schema = ConfigurationFactory::getSchema();
+        $schema = TestsHelper::getSchema();
         $schema->assertValid();
         $roleType = $schema->getType('Role');
         self::assertNotNull($roleType);

@@ -1,6 +1,7 @@
 <?php
+declare(strict_types=1);
 
-namespace BladL\BestGraphQL\Tests\SerializerTests;
+namespace BladL\BestGraphQL\Tests;
 
 use BladL\BestGraphQL\Debugger\SchemaResolverListener;
 use BladL\BestGraphQL\FieldResolver\FieldResolverResult;

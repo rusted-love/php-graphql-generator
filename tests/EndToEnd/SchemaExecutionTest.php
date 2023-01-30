@@ -1,10 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace BladL\BestGraphQL\Tests;
+namespace BladL\BestGraphQL\Tests\EndToEnd;
 
 use BladL\BestGraphQL\Exception\ResolverException;
-use BladL\BestGraphQL\Tests\Fixtures\ConfigurationFactory;
+use BladL\BestGraphQL\Tests\TestsHelper;
+use BladL\BestGraphQL\Tests\QueryForTesting;
 use GraphQL\Error\SyntaxError;
 use PHPUnit\Framework\TestCase;
 
@@ -17,7 +18,7 @@ final class SchemaExecutionTest extends TestCase
      */
     public function testProductAuthorRolesResult(): void
     {
-        $result = ConfigurationFactory::executeQuery(query: QueryForTesting::BasicProducts, variables: null);
+        $result = TestsHelper::executeQuery(query: QueryForTesting::BasicProducts, variables: null);
         self::assertCount(0, $result->errors);
         self::assertNotNull($result->data,'No data returned');
         $products = $result->data['products']??null;

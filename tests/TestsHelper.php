@@ -1,14 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace BladL\BestGraphQL\Tests\Fixtures;
+namespace BladL\BestGraphQL\Tests;
 
 use BladL\BestGraphQL\Debugger\SchemaResolverListener;
 use BladL\BestGraphQL\Exception\ResolverException;
 use BladL\BestGraphQL\GraphQLService;
 use BladL\BestGraphQL\SchemaFactory;
-use BladL\BestGraphQL\Tests\Directories;
-use BladL\BestGraphQL\Tests\QueryForTesting;
 use BladL\Time\TimeInterval;
 use GraphQL\Error\SyntaxError;
 use GraphQL\Executor\ExecutionResult;
@@ -16,7 +14,7 @@ use GraphQL\Type\Schema;
 use Psr\Container\ContainerInterface;
 use UnexpectedValueException;
 
-final readonly class ConfigurationFactory
+final readonly class TestsHelper
 {
 
     public static function getGraphQLService(SchemaResolverListener $resolverListener = null): GraphQLService

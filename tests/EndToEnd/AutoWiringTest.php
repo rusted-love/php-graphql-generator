@@ -1,21 +1,23 @@
 <?php
 declare(strict_types=1);
 
-namespace BladL\BestGraphQL\Tests;
+namespace BladL\BestGraphQL\Tests\EndToEnd;
 
 use BladL\BestGraphQL\Exception\ResolverException;
-use BladL\BestGraphQL\Tests\Fixtures\ConfigurationFactory;
+use BladL\BestGraphQL\Tests\TestsHelper;
 use BladL\BestGraphQL\Tests\Fixtures\GraphQL\Resolvers\ProductsQueryResolver;
+use BladL\BestGraphQL\Tests\QueryForTesting;
 use PHPUnit\Framework\TestCase;
 
-final class AutoWiringTest extends TestCase
+final class
+AutoWiringTest extends TestCase
 {
     /**
      * @throws ResolverException
      */
     public function testServiceInstanceIsSame(): void
     {
-        $service = ConfigurationFactory::getGraphQLService();
+        $service = TestsHelper::getGraphQLService();
         $resolver1 = $service->getConfig()->getAutoWired(ProductsQueryResolver::class);
         $resolver2 = $service->getConfig()->getAutoWired(ProductsQueryResolver::class);
         self::assertSame($resolver1, $resolver2);
@@ -28,7 +30,7 @@ final class AutoWiringTest extends TestCase
 
     public function testMethodAutoWiring(): void
     {
-        $result = ConfigurationFactory::executeQuery(query: QueryForTesting::ProductWithVariants, variables: [
+        $result = TestsHelper::executeQuery(query: QueryForTesting::ProductWithVariants, variables: [
             'available' => false
         ]);
         $data = $result->data;
@@ -44,7 +46,7 @@ final class AutoWiringTest extends TestCase
     }
 
     public function testInvalidReturnedValue():void {
-        $result = ConfigurationFactory::executeQuery(query: QueryForTesting::ProductWithVariantsWrongReturnValue, variables: [
+        $result = TestsHelper::executeQuery(query: QueryForTesting::ProductWithVariantsWrongReturnValue, variables: [
             'available' => false
         ]);
         self::assertCount(1, $result->errors);
