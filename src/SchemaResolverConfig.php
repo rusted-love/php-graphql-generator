@@ -7,6 +7,7 @@ use BladL\BestGraphQL\Configuration\OperationConfig;
 use BladL\BestGraphQL\Configuration\TypesConfig;
 use BladL\BestGraphQL\Exception\ResolverException;
 use BladL\BestGraphQL\FieldResolver\FieldResolverCollection;
+use BladL\BestGraphQL\FieldResolver\FieldResolvers\ListFieldResolver;
 use BladL\BestGraphQL\FieldResolver\FieldResolvers\TypeObjectFieldResolver;
 use BladL\BestGraphQL\FieldResolver\FieldResolvers\OperationFieldResolver;
 use League\Container\Container;
@@ -21,6 +22,7 @@ use Psr\Container\NotFoundExceptionInterface;
 final readonly class SchemaResolverConfig
 {
     private ContainerInterface $container;
+    private ReflectionContainer $reflectionContainer;
 
     public function __construct(
         public TypesConfig     $typesConfig,
@@ -30,7 +32,8 @@ final readonly class SchemaResolverConfig
     {
         $finalContainer = new Container();
         $finalContainer->delegate($container);
-        $finalContainer->delegate((new ReflectionContainer(cacheResolutions: true)));
+        $this->reflectionContainer = new ReflectionContainer(cacheResolutions: true);
+        $finalContainer->delegate($this->reflectionContainer);
         $this->container = $finalContainer;
     }
 
@@ -38,7 +41,9 @@ final readonly class SchemaResolverConfig
     {
         return new FieldResolverCollection(
             [new TypeObjectFieldResolver($this),
-                new OperationFieldResolver($this)]
+                new OperationFieldResolver($this),
+                new ListFieldResolver($this)
+            ]
         );
     }
 
@@ -58,6 +63,16 @@ final readonly class SchemaResolverConfig
             throw new ResolverException('Failed to inject ' . $class, previous: $e);
 
         }
+    }
+
+    /**
+     * @param callable $func
+     * @param array<string,mixed> $args
+     * @return mixed
+     */
+    public function callAutoWired(callable $func, array $args = []): mixed
+    {
+        return $this->reflectionContainer->call($func, $args);
     }
 
     public function isClassSchemaService(string $class): bool

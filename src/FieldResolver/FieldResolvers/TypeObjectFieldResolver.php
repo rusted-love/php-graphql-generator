@@ -6,6 +6,7 @@ namespace BladL\BestGraphQL\FieldResolver\FieldResolvers;
 use BladL\BestGraphQL\Exception\ResolverException;
 use BladL\BestGraphQL\FieldResolver\FieldResolverInfo;
 use BladL\BestGraphQL\FieldResolver\FieldResolverAbstract;
+use BladL\BestGraphQL\Tests\Fixtures\GraphQL\Types\ProductVariantType;
 use BladL\BestGraphQL\Utils;
 use UnitEnum;
 use function assert;
@@ -35,7 +36,8 @@ final readonly class TypeObjectFieldResolver extends FieldResolverAbstract
         if (method_exists($value, $fieldName)) {
             $callable = [$value, $fieldName];
             assert(is_callable($callable));
-            $value = call_user_func_array($callable, $info->args);
+            $value = $this->schemaResolverConfig->callAutoWired($callable,$info->args);
+
         } elseif (property_exists($value, $fieldName)) {
             $value = $value->{$fieldName};
         } else {

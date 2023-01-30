@@ -35,7 +35,22 @@ abstract readonly class FieldResolverAbstract implements FieldResolverInterface
         if (!$this->isFinalValue($value)) {
             throw new ResolverException('Result of type ' . gettype($value) . ' from serializer ' . static::class . ' is not final. Field ' . $info->getFieldName());
         }
+        if (is_array($info->objectValue) && is_array($value)) {
+            \assert($this->countdim($info->objectValue) !== $this->countdim($value));//Count of array dimensions after serialization increased
+        }
         return $value;
+    }
+
+    /**
+     * @param mixed[] $array
+     * @return int
+     */
+    private function countdim(array $array): int
+    {
+        if (is_array(reset($array))) {
+            return $this->countdim(reset($array)) + 1;
+        }
+        return 1;
     }
 
     /**
@@ -44,9 +59,9 @@ abstract readonly class FieldResolverAbstract implements FieldResolverInterface
      */
     private function isArrayFinalValue(array $value): bool
     {
-        if (!array_is_list($value)) {
-            throw new ResolverException('Only list array value aeupported ');
-        }
+        /*if (!array_is_list($value)) {
+            throw new ResolverException('Only list array value aeupported '); Return back if return type of array
+        }*/
         foreach ($value as $item) {
             if (!$this->isFinalValue($item)) {
                 return false;

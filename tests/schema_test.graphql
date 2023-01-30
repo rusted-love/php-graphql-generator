@@ -8,10 +8,16 @@ type User {
     username:String
     roles:[Role!]
 }
+type ProductVariant {
+    id:ID!
+}
 type Product {
     id:ID!
     title:String!
     author:User
+    variants(available:Boolean = true):[ProductVariant!]!
+    wrongVariantReturnValue(available:Boolean = true):ProductVariant
+
 }
 type Query {
     products(searchString:String): [Product!]!

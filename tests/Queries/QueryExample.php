@@ -45,4 +45,24 @@ query test2 {
     }
 }
 GRAPHQL;
+    case ProductWithVariants = <<<GRAPHQL
+query test1(\$available:Boolean) {
+    product: productById(id:"99999_222") {
+        id
+        variants(available:\$available) {
+           id
+        }
+    }
+}
+GRAPHQL;
+    case ProductWithVariantsWrongReturnValue = <<<GRAPHQL
+query test1(\$available:Boolean) {
+    product: productById(id:"99999_222") {
+        id
+        wrongVariantReturnValue(available:\$available) {
+           id
+        }
+    }
+}
+GRAPHQL;
 }
