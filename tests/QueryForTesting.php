@@ -65,4 +65,22 @@ query test1(\$available:Boolean) {
     }
 }
 GRAPHQL;
+    case ExternalType = <<<GRAPHQL
+query test1 {
+    order: orderById(id:"amazing_order") {
+        id
+        description
+        totalItemPrice{
+            currency
+            amount
+        }
+        products{
+            id
+             author {
+               roles
+            }
+        }
+    }
+}
+GRAPHQL;
 }

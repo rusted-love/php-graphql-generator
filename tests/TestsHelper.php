@@ -12,6 +12,9 @@ use GraphQL\Error\SyntaxError;
 use GraphQL\Executor\ExecutionResult;
 use GraphQL\Type\Schema;
 use Psr\Container\ContainerInterface;
+use Symfony\Component\Cache\Adapter\AdapterInterface;
+use Symfony\Component\Cache\Adapter\PhpFilesAdapter;
+use Symfony\Component\Cache\Exception\CacheException;
 use UnexpectedValueException;
 
 final readonly class TestsHelper
@@ -32,7 +35,7 @@ final readonly class TestsHelper
                 return false;
             }
         };
-        return new StandardGraphQLServer(schemaPath: Directories::getPathFromRoot(self::SCHEMA_PATH), cacheFilePath: Directories::getPathFromRoot(self::CACHE_FILE_PATH), namespace: '\BladL\BestGraphQL\Tests\Fixtures\GraphQL', container: $container, cacheLifeTime: TimeInterval::second(), debugResolverListener: $resolverListener);
+        return new StandardGraphQLServer(schemaPath: Directories::getPathFromRoot(self::SCHEMA_PATH), cache: self::getCache(), namespace: '\BladL\BestGraphQL\Tests\Fixtures\GraphQL', container: $container, cacheLifeTime: TimeInterval::second(), debugResolverListener: $resolverListener);
 
     }
 
@@ -44,12 +47,19 @@ final readonly class TestsHelper
         try {
             return self::getGraphQLService(resolverListener: $resolverListener)->executeQuery(query: $query->value, variables: $variables);
         } catch (ResolverException|SyntaxError $e) {
-            throw new UnexpectedValueException($e->getMessage(),previous: $e);
+            throw new UnexpectedValueException($e->getMessage(), previous: $e);
         }
     }
 
-    public const CACHE_FILE_PATH = '/tests/schema_test_output.php';
+    public const CACHE_DIR_PATH = '/tests/schema_test_output';
     public const SCHEMA_PATH = '/tests/schema_test.graphql';
+
+
+    public static function getCache(): AdapterInterface
+    {
+        /** @noinspection PhpUnhandledExceptionInspection */
+        return new PhpFilesAdapter(namespace: 'Ssss', directory: Directories::getPathFromRoot(self::CACHE_DIR_PATH), appendOnly: false);
+    }
 
     /**
      * @throws SyntaxError|ResolverException
@@ -60,8 +70,9 @@ final readonly class TestsHelper
         if (false === $schemaContent) {
             throw new UnexpectedValueException('No schema fixture');
         }
-        $generator = new SchemaFactory(schemaPath: $schemaContent, cacheFilePath: Directories::getPathFromRoot(self::CACHE_FILE_PATH));
-        return $generator->parseSchema();
+        $config = self::getGraphQLService()->getConfig();
+        $generator = new SchemaFactory(schemaPath: $schemaContent, cache: self::getCache(), config: $config);
+        return $generator->compileProject()->getSchema();
     }
 
 }

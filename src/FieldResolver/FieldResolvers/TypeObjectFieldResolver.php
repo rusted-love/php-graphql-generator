@@ -22,7 +22,7 @@ final readonly class TypeObjectFieldResolver extends FieldResolverAbstract
 
     public function supports(FieldResolverInfo $info): bool
     {
-        return is_object($info->objectValue) && $this->schemaResolverConfig->typesConfig->isTypeClassExists($info->getParentTypeName());
+        return is_object($info->objectValue) && $this->project->getConfig()->typesConfig->isTypeClassExists($info->getParentTypeName()) && !$this->project->isExternalObject($info->objectValue);
     }
 
     /**
@@ -36,7 +36,7 @@ final readonly class TypeObjectFieldResolver extends FieldResolverAbstract
         if (method_exists($value, $fieldName)) {
             $callable = [$value, $fieldName];
             assert(is_callable($callable));
-            $value = $this->schemaResolverConfig->callAutoWired($callable,$info->args);
+            $value = $this->project->getConfig()->callAutoWired($callable,$info->args);
 
         } elseif (property_exists($value, $fieldName)) {
             $value = $value->{$fieldName};

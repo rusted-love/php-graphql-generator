@@ -11,6 +11,7 @@ use BladL\Time\TimeInterval;
 use GraphQL\Error\SyntaxError;
 use GraphQL\Executor\ExecutionResult;
 use Psr\Container\ContainerInterface;
+use Symfony\Component\Cache\Adapter\AdapterInterface;
 
 final readonly class StandardGraphQLServer
 {
@@ -21,7 +22,7 @@ final readonly class StandardGraphQLServer
 
     public function __construct(
         private string                  $schemaPath,
-        private string                  $cacheFilePath,
+        private AdapterInterface                  $cache,
         string                          $namespace,
         private ContainerInterface      $container,
         private ?TimeInterval           $cacheLifeTime = null,
@@ -47,9 +48,9 @@ final readonly class StandardGraphQLServer
      */
     public function executeQuery(string $query, array $variables = null): ExecutionResult
     {
-        $factory = new SchemaFactory(schemaPath: $this->schemaPath, cacheFilePath: $this->cacheFilePath, cacheLifetime: $this->cacheLifeTime);
-        $schema = $factory->parseSchema();
-        $executor = new SchemaExecutor(schema: $schema, schemaResolverConfig: $this->config, resolverListener: $this->debugResolverListener);
+        $factory = new SchemaFactory(schemaPath: $this->schemaPath, cache: $this->cache, config: $this->config, cacheLifetime: $this->cacheLifeTime);
+        $project = $factory->compileProject();
+        $executor = new SchemaExecutor(project: $project, schemaResolverConfig: $this->config, resolverListener: $this->debugResolverListener);
         return $executor->executeSchema(queryString: $query, variables: $variables);
     }
 

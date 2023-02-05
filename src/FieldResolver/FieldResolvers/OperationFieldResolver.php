@@ -32,7 +32,7 @@ final readonly class OperationFieldResolver extends FieldResolverAbstract
             throw new ResolverException("Class for $parentTypeName not exist");
         }
         \assert(\class_exists($class));
-        $resolver = $this->schemaResolverConfig->getAutoWired($class);
+        $resolver = $this->schemaResolverConfig->getService($class);
         \assert(\is_object($resolver));
         if (method_exists($resolver, 'resolve')) {
             return call_user_func_array([$resolver, 'resolve'], $info->args);

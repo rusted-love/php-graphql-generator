@@ -18,8 +18,8 @@ AutoWiringTest extends TestCase
     public function testServiceInstanceIsSame(): void
     {
         $service = TestsHelper::getGraphQLService();
-        $resolver1 = $service->getConfig()->getAutoWired(ProductsQueryResolver::class);
-        $resolver2 = $service->getConfig()->getAutoWired(ProductsQueryResolver::class);
+        $resolver1 = $service->getConfig()->getService(ProductsQueryResolver::class);
+        $resolver2 = $service->getConfig()->getService(ProductsQueryResolver::class);
         self::assertSame($resolver1, $resolver2);
         self::assertInstanceOf(ProductsQueryResolver::class, $resolver1);
         self::assertInstanceOf(ProductsQueryResolver::class, $resolver2);

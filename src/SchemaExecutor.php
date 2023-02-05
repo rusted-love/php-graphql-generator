@@ -14,7 +14,7 @@ use GraphQL\Type\Schema;
  */
 final readonly class SchemaExecutor
 {
-    public function __construct(private Schema                  $schema, private SchemaResolverConfig $schemaResolverConfig,
+    public function __construct(private CompiledProject                  $project, private SchemaResolverConfig $schemaResolverConfig,
                                 private ?SchemaResolverListener $resolverListener = null)
     {
     }
@@ -26,20 +26,21 @@ final readonly class SchemaExecutor
     {
         $config = $this->schemaResolverConfig;
         $resolverListener = $this->resolverListener;
+        $project = $this->project;
         /**
          * @param array<string,mixed> $args
          */
-        $resolver = static function (mixed $objectValue, array $args, mixed $contextValue, ResolveInfo $info) use ($config, $resolverListener): mixed {
+        $resolver = static function (mixed $objectValue, array $args, mixed $contextValue, ResolveInfo $info) use ($config, $resolverListener,$project): mixed {
 
             $resolverInput = new FieldResolverInfo(
                 objectValue: $objectValue, args: $args, contextValue: $contextValue, info: $info
             );
-            $result = $config->getRootSerializers()->serialize($resolverInput);
+            $result = $config->getRootSerializers($project)->serialize($resolverInput);
             $resolverListener?->onSerialized($result);
             return $result->resultValue;
         };
         return GraphQL::executeQuery(
-            schema: $this->schema, source: $queryString, variableValues: $variables, fieldResolver: $resolver
+            schema: $this->project->getSchema(), source: $queryString, variableValues: $variables, fieldResolver: $resolver
         );
     }
 

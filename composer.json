@@ -8,7 +8,9 @@
         "psr/container": "^2.0",
         "nette/php-generator": "^4.0",
         "bladl/time": "^0.0.1",
-        "league/container": "^4.2"
+        "league/container": "^4.2",
+        "psr/cache": "^3.0",
+        "symfony/cache": "^6.2"
     },
     "license": "MIT",
     "autoload": {

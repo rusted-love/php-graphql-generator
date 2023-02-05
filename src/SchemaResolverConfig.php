@@ -7,6 +7,7 @@ use BladL\BestGraphQL\Configuration\OperationConfig;
 use BladL\BestGraphQL\Configuration\TypesConfig;
 use BladL\BestGraphQL\Exception\ResolverException;
 use BladL\BestGraphQL\FieldResolver\FieldResolverCollection;
+use BladL\BestGraphQL\FieldResolver\FieldResolvers\ExternalTypeObjectFieldResolver;
 use BladL\BestGraphQL\FieldResolver\FieldResolvers\ListFieldResolver;
 use BladL\BestGraphQL\FieldResolver\FieldResolvers\TypeObjectFieldResolver;
 use BladL\BestGraphQL\FieldResolver\FieldResolvers\OperationFieldResolver;
@@ -23,11 +24,10 @@ final readonly class SchemaResolverConfig
 {
     private ContainerInterface $container;
     private ReflectionContainer $reflectionContainer;
-
     public function __construct(
         public TypesConfig     $typesConfig,
         public OperationConfig $operationConfig,
-        ContainerInterface     $container
+        ContainerInterface     $container,
     )
     {
         $finalContainer = new Container();
@@ -37,12 +37,13 @@ final readonly class SchemaResolverConfig
         $this->container = $finalContainer;
     }
 
-    public function getRootSerializers(): FieldResolverCollection
+    public function getRootSerializers(CompiledProject $project): FieldResolverCollection
     {
         return new FieldResolverCollection(
-            [new TypeObjectFieldResolver($this),
-                new OperationFieldResolver($this),
-                new ListFieldResolver($this)
+            [new TypeObjectFieldResolver($project),
+                new OperationFieldResolver($project),
+                new ListFieldResolver($project),
+                new ExternalTypeObjectFieldResolver($project)
             ]
         );
     }
@@ -50,12 +51,15 @@ final readonly class SchemaResolverConfig
 
     /**
      * @throws ResolverException
+     * @template T of object
+     * @param class-string<T> $class
+     * @return T
      */
-    public function getAutoWired(string $class): mixed
+    public function getService(string $class): object
     {
 
         try {
-            return $this->container->get($class);
+            $obj =  $this->container->get($class);
         } catch (NotFoundExceptionInterface $e) {
             throw new ResolverException("Entry $class not found in container", previous: $e);
 
@@ -63,11 +67,19 @@ final readonly class SchemaResolverConfig
             throw new ResolverException('Failed to inject ' . $class, previous: $e);
 
         }
+        if (!\is_object($obj)) {
+            throw new ResolverException("Container returned non object for $class");
+        }
+        if (!$obj instanceof $class) {
+            throw new ResolverException("Container expected to return object of class $class. But returned ".$obj::class. ' instead');
+        }
+        return $obj;
+
     }
 
     /**
      * @param callable $func
-     * @param array<string,mixed> $args
+     * @param array<string|int,mixed> $args
      * @return mixed
      */
     public function callAutoWired(callable $func, array $args = []): mixed

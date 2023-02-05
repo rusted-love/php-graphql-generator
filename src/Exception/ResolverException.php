@@ -4,10 +4,9 @@ declare(strict_types=1);
 namespace BladL\BestGraphQL\Exception;
 
 
-use Exception;
 use Throwable;
 
-final class ResolverException extends Exception implements GraphQLExceptionInterface
+final class ResolverException extends GeneralSchemaExecutionException implements GraphQLExceptionInterface
 {
     /**
      * @param array<string,mixed> $extensions

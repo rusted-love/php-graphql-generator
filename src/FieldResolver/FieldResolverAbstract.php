@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace BladL\BestGraphQL\FieldResolver;
 
+use BladL\BestGraphQL\CompiledProject;
 use BladL\BestGraphQL\Exception\ResolverException;
 use BladL\BestGraphQL\SchemaResolverConfig;
+use BladL\BestGraphQL\Tests\Fixtures\App\Entity\ShopOrder;
 use function array_is_list;
 use function gettype;
 use function is_array;
@@ -17,8 +19,11 @@ use function is_string;
 
 abstract readonly class FieldResolverAbstract implements FieldResolverInterface
 {
-    public function __construct(protected SchemaResolverConfig $schemaResolverConfig)
+    protected SchemaResolverConfig $schemaResolverConfig;
+
+    public function __construct(protected CompiledProject $project)
     {
+        $this->schemaResolverConfig = $project->getConfig();
     }
 
     abstract protected function proceedSerialize(FieldResolverInfo $info): mixed;
@@ -38,6 +43,7 @@ abstract readonly class FieldResolverAbstract implements FieldResolverInterface
         if (is_array($info->objectValue) && is_array($value)) {
             \assert($this->countdim($info->objectValue) !== $this->countdim($value));//Count of array dimensions after serialization increased
         }
+
         return $value;
     }
 
@@ -79,7 +85,7 @@ abstract readonly class FieldResolverAbstract implements FieldResolverInterface
 
             return $this->isArrayFinalValue($value);
         }
-        return is_int($value) || is_float($value) || is_string($value) || is_bool($value) || (is_object($value) && $this->schemaResolverConfig->typesConfig->classIsType($value::class));
+        return is_int($value) || is_float($value) || is_string($value) || is_bool($value) || (is_object($value) && ($this->schemaResolverConfig->typesConfig->classIsType($value::class) || $this->project->isExternalObject($value)));
     }
 
 

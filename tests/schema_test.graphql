@@ -19,9 +19,21 @@ type Product {
     wrongVariantReturnValue(available:Boolean = true):ProductVariant
 
 }
+type Money {
+    currency:Currency!
+    amount:Int!
+}
+type Order {
+    id:ID!
+    description:String!
+    totalItemPrice:Money!
+    products:[Product!]!
+    random:Int!
+}
 type Query {
     products(searchString:String): [Product!]!
     productById(id:ID!):Product!
+    orderById(id:ID!):Order!
 }
 input ProductInput {
     id:ID!
@@ -33,7 +45,8 @@ enum Currency {
     Bitcoin
 }
 input MoneyInput {
-    currency:Currency
+    currency:Currency!
+    amount:Int!
 }
 input ProductDataInput {
     title:String

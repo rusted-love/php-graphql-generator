@@ -7,8 +7,4 @@ namespace BladL\BestGraphQL\Tests;
 use function dirname;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
-$file = Directories::getPathFromRoot(TestsHelper::CACHE_FILE_PATH);
-if (file_exists($file)) {
-    unlink($file);
-
-}
+TestsHelper::getCache()->clear();
