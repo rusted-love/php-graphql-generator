@@ -15,7 +15,7 @@ final class OrderType
         return $order->getId();
     }
     
-    public function totalItemPrice(ShopOrder $order,RandomValuesService $randomValuesService):Money {
+    public function totalItemPrice(RandomValuesService $randomValuesService):Money {
         return new Money(currency: 'USD', amount: $randomValuesService->getRandomInt());
     }
 
