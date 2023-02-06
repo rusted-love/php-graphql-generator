@@ -7,5 +7,5 @@ interface FieldResolverInterface
 {
 
     public function supports(FieldResolverInfo $info):bool;
-    public function serialize(FieldResolverInfo $info):mixed;
+    public function resolve(FieldResolverInfo $info):mixed;
 }

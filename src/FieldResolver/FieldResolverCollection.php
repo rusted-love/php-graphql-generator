@@ -16,12 +16,12 @@ final readonly class FieldResolverCollection
     {
     }
 
-    public function serialize(FieldResolverInfo $info): FieldResolverResult
+    public function resolveField(FieldResolverInfo $info): FieldResolverResult
     {
         foreach ($this->serializers as $serializer) {
             if ($serializer->supports($info)) {
                 return new FieldResolverResult(
-                    resultValue: $serializer->serialize($info), usedSerializer: $serializer, resolverInfo: $info
+                    resultValue: $serializer->resolve($info), usedSerializer: $serializer, resolverInfo: $info
                 );
             }
         }

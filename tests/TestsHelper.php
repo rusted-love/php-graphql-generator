@@ -3,7 +3,8 @@ declare(strict_types=1);
 
 namespace BladL\BestGraphQL\Tests;
 
-use BladL\BestGraphQL\Debugger\SchemaResolverListener;
+use BladL\BestGraphQL\Events\EventCollection;
+use BladL\BestGraphQL\Events\EventListenerInterface;
 use BladL\BestGraphQL\Exception\ResolverException;
 use BladL\BestGraphQL\StandardGraphQLServer;
 use BladL\BestGraphQL\SchemaFactory;
@@ -14,13 +15,12 @@ use GraphQL\Type\Schema;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\Cache\Adapter\PhpFilesAdapter;
-use Symfony\Component\Cache\Exception\CacheException;
 use UnexpectedValueException;
 
 final readonly class TestsHelper
 {
 
-    public static function getGraphQLService(SchemaResolverListener $resolverListener = null): StandardGraphQLServer
+    public static function getGraphQLService(): StandardGraphQLServer
     {
         $container = new class implements ContainerInterface {
 
@@ -35,17 +35,23 @@ final readonly class TestsHelper
                 return false;
             }
         };
-        return new StandardGraphQLServer(schemaPath: Directories::getPathFromRoot(self::SCHEMA_PATH), cache: self::getCache(), namespace: '\BladL\BestGraphQL\Tests\Fixtures\GraphQL', container: $container, cacheLifeTime: TimeInterval::second(), debugResolverListener: $resolverListener);
+        return new StandardGraphQLServer(schemaPath: Directories::getPathFromRoot(self::SCHEMA_PATH), cache: self::getCache(), namespace: '\BladL\BestGraphQL\Tests\Fixtures\GraphQL', container: $container, cacheLifeTime: TimeInterval::second(),eventsContainer: new EventCollection());
 
     }
 
     /**
      * @param array<string,mixed>|null $variables
+     * @param EventListenerInterface[] $listeners
      */
-    public static function executeQuery(QueryForTesting $query, ?array $variables, SchemaResolverListener $resolverListener = null): ExecutionResult
+    public static function executeQuery(QueryForTesting $query, ?array $variables,array $listeners = []): ExecutionResult
     {
+        $gql = self::getGraphQLService();
+        foreach ($listeners as $listener) {
+            $gql->getEvents()->add($listener);
+        }
         try {
-            return self::getGraphQLService(resolverListener: $resolverListener)->executeQuery(query: $query->value, variables: $variables);
+
+            return $gql->executeQuery(query: $query->value, variables: $variables);
         } catch (ResolverException|SyntaxError $e) {
             throw new UnexpectedValueException($e->getMessage(), previous: $e);
         }

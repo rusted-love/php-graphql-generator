@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace BladL\BestGraphQL\Tests;
 
-use BladL\BestGraphQL\Debugger\SchemaResolverListener;
+use BladL\BestGraphQL\Events\AfterFieldResolvedListenerInterface;
 use BladL\BestGraphQL\FieldResolver\FieldResolverResult;
 
-final class SimpleResolverListener implements SchemaResolverListener
+final class SimpleResolverResultListener implements AfterFieldResolvedListenerInterface
 {
     /**
      * @var FieldResolverResult[]
@@ -16,7 +16,7 @@ final class SimpleResolverListener implements SchemaResolverListener
     {
     }
 
-    public function onSerialized(FieldResolverResult $result): void
+    public function afterFieldResolved(FieldResolverResult $result): void
     {
         $this->log[] = $result;
     }

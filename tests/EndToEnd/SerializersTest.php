@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace BladL\BestGraphQL\Tests\EndToEnd;
 
 use BladL\BestGraphQL\Tests\QueryForTesting;
-use BladL\BestGraphQL\Tests\SimpleResolverListener;
+use BladL\BestGraphQL\Tests\SimpleResolverResultListener;
 use BladL\BestGraphQL\Tests\TestsHelper;
 use PHPUnit\Framework\TestCase;
 
@@ -13,9 +13,9 @@ final class SerializersTest extends TestCase
 
     public function testProductFixtureSerializer(): void
     {
-        $listener = new SimpleResolverListener();
+        $listener = new SimpleResolverResultListener();
        $result =  TestsHelper::executeQuery(
-            query: QueryForTesting::BasicProducts, variables: null,resolverListener:$listener
+            query: QueryForTesting::BasicProducts, variables: null,listeners:[$listener]
         );
        self::assertCount(0,$result->errors);
 

@@ -15,7 +15,7 @@ readonly class  ExternalTypeObjectFieldResolver extends FieldResolverAbstract
     /**
      * @throws ResolverException
      */
-    protected function proceedSerialize(FieldResolverInfo $info): mixed
+    protected function proceedResolve(FieldResolverInfo $info): mixed
     {
         $objectValue = $info->objectValue;
         \assert(\is_object($objectValue));

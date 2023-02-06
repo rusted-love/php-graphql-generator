@@ -23,7 +23,7 @@ final readonly class OperationFieldResolver extends FieldResolverAbstract
     /**
      * @throws ResolverException
      */
-    protected function proceedSerialize(FieldResolverInfo $info): mixed
+    protected function proceedResolve(FieldResolverInfo $info): mixed
     {
         $fieldName = $info->getFieldName();
         $parentTypeName = $info->getParentTypeName();

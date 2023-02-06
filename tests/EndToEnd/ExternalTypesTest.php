@@ -6,16 +6,15 @@ namespace BladL\BestGraphQL\Tests\EndToEnd;
 use BladL\BestGraphQL\FieldResolver\FieldResolvers\ExternalTypeObjectFieldResolver;
 use BladL\BestGraphQL\Tests\QueryForTesting;
 use BladL\BestGraphQL\Tests\SchemaExecuteTestCase;
-use BladL\BestGraphQL\Tests\SimpleResolverListener;
+use BladL\BestGraphQL\Tests\SimpleResolverResultListener;
 use BladL\BestGraphQL\Tests\TestsHelper;
-use PHPUnit\Framework\TestCase;
 
 final class ExternalTypesTest extends SchemaExecuteTestCase
 {
     public function testExpectedBehaviour(): void
     {
-        $listener =new SimpleResolverListener();
-        $result = TestsHelper::executeQuery(QueryForTesting::ExternalType, [],resolverListener: $listener);
+        $listener =new SimpleResolverResultListener();
+        $result = TestsHelper::executeQuery(QueryForTesting::ExternalType, [],listeners: [$listener]);
         $data = $result->data;
         foreach ($listener->log as $item) {
 

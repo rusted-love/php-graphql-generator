@@ -26,17 +26,17 @@ abstract readonly class FieldResolverAbstract implements FieldResolverInterface
         $this->schemaResolverConfig = $project->getConfig();
     }
 
-    abstract protected function proceedSerialize(FieldResolverInfo $info): mixed;
+    abstract protected function proceedResolve(FieldResolverInfo $info): mixed;
 
     /**
      * @throws ResolverException
      */
-    public function serialize(FieldResolverInfo $info): mixed
+    public function resolve(FieldResolverInfo $info): mixed
     {
         if (!$this->supports($info)) {
             throw new ResolverException('Field not supported for type mapper ' . static::class);
         }
-        $value = $this->proceedSerialize($info);
+        $value = $this->proceedResolve($info);
         if (!$this->isFinalValue($value)) {
             throw new ResolverException('Result of type ' . gettype($value) . ' from serializer ' . static::class . ' is not final. Field ' . $info->getFieldName());
         }

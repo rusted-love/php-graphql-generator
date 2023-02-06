@@ -17,7 +17,7 @@ final readonly class CompiledProject
      * @param Schema $schema
      * @param SchemaResolverConfig $config
      */
-    public function __construct(private array $meta, private Schema $schema,private SchemaResolverConfig $config)
+    public function __construct(private array $meta, private Schema $schema, private SchemaResolverConfig $config)
     {
     }
 
@@ -28,15 +28,19 @@ final readonly class CompiledProject
     {
         return $this->meta;
     }
-    public function getExternalObjectTypeClassService(object $obj):?string {
-        $info =  $this->meta['externalTypes'][$obj::class]??null;
-        if (null ===$info) {
+
+    public function getExternalObjectTypeClassService(object $obj): ?string
+    {
+        $info = $this->meta['externalTypes'][$obj::class] ?? null;
+        if (null === $info) {
             return null;
         }
         assert($obj::class === $info['objectClass']);
         return $info['typeClass'];
     }
-    public function isExternalObject(object $obj):bool {
+
+    public function isExternalObject(object $obj): bool
+    {
 
         return null !== $this->getExternalObjectTypeClassService($obj);
     }

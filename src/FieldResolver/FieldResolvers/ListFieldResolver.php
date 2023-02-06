@@ -17,7 +17,7 @@ final readonly class ListFieldResolver extends FieldResolverAbstract
      * @return array<int,mixed>
      * @throws ResolverException
      */
-    protected function proceedSerialize(FieldResolverInfo $info): array
+    protected function proceedResolve(FieldResolverInfo $info): array
     {
         $value = $info->objectValue;
         \assert(is_array($value) && array_is_list($value));

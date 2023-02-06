@@ -28,7 +28,7 @@ final readonly class TypeObjectFieldResolver extends FieldResolverAbstract
     /**
      * @throws ResolverException
      */
-    protected function proceedSerialize(FieldResolverInfo $info): mixed
+    protected function proceedResolve(FieldResolverInfo $info): mixed
     {
         $fieldName = $info->getFieldName();
         $value = $info->objectValue;

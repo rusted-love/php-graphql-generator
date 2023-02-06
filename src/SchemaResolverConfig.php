@@ -5,6 +5,7 @@ namespace BladL\BestGraphQL;
 
 use BladL\BestGraphQL\Configuration\OperationConfig;
 use BladL\BestGraphQL\Configuration\TypesConfig;
+use BladL\BestGraphQL\Events\EventCollection;
 use BladL\BestGraphQL\Exception\ResolverException;
 use BladL\BestGraphQL\FieldResolver\FieldResolverCollection;
 use BladL\BestGraphQL\FieldResolver\FieldResolvers\ExternalTypeObjectFieldResolver;
@@ -28,6 +29,7 @@ final readonly class SchemaResolverConfig
         public TypesConfig     $typesConfig,
         public OperationConfig $operationConfig,
         ContainerInterface     $container,
+        public EventCollection $events
     )
     {
         $finalContainer = new Container();
