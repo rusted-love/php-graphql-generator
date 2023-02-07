@@ -62,6 +62,8 @@ final class AccessSecurityMiddlewareExampleTest extends SchemaExecuteTestCase
         self::assertExpectedError(query: QueryForTesting::TestFieldAccess, error: 'Access denied. Role Manager required!');
         self::assertExpectedError(query: QueryForTesting::TestFieldAccess, error: 'Access denied. Role Developer required!', currentRoles: [RoleEnum::Manager]);
         self::assertExpectedError(query: QueryForTesting::TestFieldAccess, error: 'Access denied. Role Admin required!', currentRoles: [RoleEnum::Manager, RoleEnum::Developer]);
+        self::assertExpectedError(query: QueryForTesting::TestFieldAccess, error: 'Access denied. Role Developer required!', currentRoles: [RoleEnum::Admin, RoleEnum::Manager]);
+
         $data = self::assertExpectNoError(query: QueryForTesting::TestFieldAccess, currentRoles: [RoleEnum::Developer, RoleEnum::Admin,RoleEnum::Manager]);
         self::assertResultIs($data,[
             'typeAccessTest'=>[
