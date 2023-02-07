@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace BladL\BestGraphQL\Tests\EndToEnd;
 
-use BladL\BestGraphQL\Exception\ResolverException;
+use BladL\BestGraphQL\Exception\FieldResolverException;
 use BladL\BestGraphQL\Tests\TestsHelper;
 use BladL\BestGraphQL\Tests\Fixtures\GraphQL\Resolvers\ProductsQueryResolver;
 use BladL\BestGraphQL\Tests\QueryForTesting;
@@ -13,7 +13,7 @@ final class
 AutoWiringTest extends TestCase
 {
     /**
-     * @throws ResolverException
+     * @throws FieldResolverException
      */
     public function testServiceInstanceIsSame(): void
     {

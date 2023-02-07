@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace BladL\BestGraphQL;
 
+use BladL\BestGraphQL\Exception\ClientSafeException;
+use BladL\BestGraphQL\Exception\ClientUnsafeException;
 use BladL\BestGraphQL\FieldResolver\FieldResolverInfo;
 use GraphQL\Executor\ExecutionResult;
 use GraphQL\GraphQL;

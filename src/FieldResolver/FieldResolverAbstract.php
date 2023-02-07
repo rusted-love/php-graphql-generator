@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace BladL\BestGraphQL\FieldResolver;
 
 use BladL\BestGraphQL\CompiledProject;
-use BladL\BestGraphQL\Exception\ResolverException;
+use BladL\BestGraphQL\Exception\FieldResolverException;
 use BladL\BestGraphQL\SchemaResolverConfig;
 use BladL\BestGraphQL\Tests\Fixtures\App\Entity\ShopOrder;
 use function array_is_list;
@@ -29,16 +29,16 @@ abstract readonly class FieldResolverAbstract implements FieldResolverInterface
     abstract protected function proceedResolve(FieldResolverInfo $info): mixed;
 
     /**
-     * @throws ResolverException
+     * @throws FieldResolverException
      */
     public function resolve(FieldResolverInfo $info): mixed
     {
         if (!$this->supports($info)) {
-            throw new ResolverException('Field not supported for type mapper ' . static::class);
+            throw new FieldResolverException('Field not supported for type mapper ' . static::class);
         }
         $value = $this->proceedResolve($info);
         if (!$this->isFinalValue($value)) {
-            throw new ResolverException('Result of type ' . gettype($value) . ' from serializer ' . static::class . ' is not final. Field ' . $info->getFieldName());
+            throw new FieldResolverException('Result of type ' . gettype($value) . ' from serializer ' . static::class . ' is not final. Field ' . $info->getFieldName());
         }
         if (is_array($info->objectValue) && is_array($value)) {
             \assert($this->countdim($info->objectValue) !== $this->countdim($value));//Count of array dimensions after serialization increased
@@ -61,12 +61,12 @@ abstract readonly class FieldResolverAbstract implements FieldResolverInterface
 
     /**
      * @param mixed[] $value
-     * @throws ResolverException
+     * @throws FieldResolverException
      */
     private function isArrayFinalValue(array $value): bool
     {
         /*if (!array_is_list($value)) {
-            throw new ResolverException('Only list array value aeupported '); Return back if return type of array
+            throw new FieldResolverException('Only list array value aeupported '); Return back if return type of array
         }*/
         foreach ($value as $item) {
             if (!$this->isFinalValue($item)) {
@@ -77,7 +77,7 @@ abstract readonly class FieldResolverAbstract implements FieldResolverInterface
     }
 
     /**
-     * @throws ResolverException
+     * @throws FieldResolverException
      */
     private function isFinalValue(mixed $value): bool
     {

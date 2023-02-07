@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace BladL\BestGraphQL\FieldResolver\FieldResolvers;
 
-use BladL\BestGraphQL\Exception\ResolverException;
+use BladL\BestGraphQL\Exception\FieldResolverException;
 use BladL\BestGraphQL\FieldResolver\FieldResolverAbstract;
 use BladL\BestGraphQL\FieldResolver\FieldResolverInfo;
 use ReflectionException;
@@ -13,7 +13,7 @@ readonly class  ExternalTypeObjectFieldResolver extends FieldResolverAbstract
 {
 
     /**
-     * @throws ResolverException
+     * @throws FieldResolverException
      */
     protected function proceedResolve(FieldResolverInfo $info): mixed
     {
@@ -25,7 +25,7 @@ readonly class  ExternalTypeObjectFieldResolver extends FieldResolverAbstract
         $service = $this->project->getConfig()->getService($serviceClass);
         $fieldName = $info->getFieldName();
         if (!method_exists($service, $fieldName)) {
-            throw new ResolverException("Field $fieldName not defined for service type $serviceClass");
+            throw new FieldResolverException("Field $fieldName not defined for service type $serviceClass");
         }
         $callable = [$service, $fieldName];
         \assert(\is_callable($callable));
@@ -37,14 +37,14 @@ readonly class  ExternalTypeObjectFieldResolver extends FieldResolverAbstract
     /**
      * @param array<string,mixed> $args
      * @return array<string,mixed>
-     * @throws ResolverException
+     * @throws FieldResolverException
      */
     private function injectObjectValue(array $args, object $service, object $value, string $fieldName): array
     {
         try {
             $reflection = new ReflectionMethod($service, $fieldName);
         } catch (ReflectionException $e) {
-            throw new ResolverException(message: "Method $fieldName reflection failed", previous: $e);
+            throw new FieldResolverException(message: "Method $fieldName reflection failed", previous: $e);
         }
         foreach ($reflection->getParameters() as $param) {
             $type = $param->getType();

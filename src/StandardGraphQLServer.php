@@ -6,7 +6,9 @@ namespace BladL\BestGraphQL;
 use BladL\BestGraphQL\Configuration\OperationConfig;
 use BladL\BestGraphQL\Configuration\TypesConfig;
 use BladL\BestGraphQL\Events\EventCollection;
-use BladL\BestGraphQL\Exception\ResolverException;
+use BladL\BestGraphQL\Exception\CacheException;
+use BladL\BestGraphQL\Exception\CompilerException;
+use BladL\BestGraphQL\Exception\FieldResolverException;
 use BladL\Time\TimeInterval;
 use GraphQL\Error\SyntaxError;
 use GraphQL\Executor\ExecutionResult;
@@ -44,12 +46,11 @@ final readonly class StandardGraphQLServer
      * @param string $query
      * @param array<string,mixed>|null $variables
      * @return ExecutionResult
-     * @throws ResolverException
-     * @throws SyntaxError|Exception\ReflectionException
+     * @throws CompilerException|CacheException
      */
     public function executeQuery(string $query, array $variables = null): ExecutionResult
     {
-        $factory = new SchemaFactory(schemaPath: $this->schemaPath, cache: $this->cache, config: $this->config, cacheLifetime: $this->cacheLifeTime);
+        $factory = new SchemaCompiler(schemaPath: $this->schemaPath, cache: $this->cache, config: $this->config, cacheLifetime: $this->cacheLifeTime);
         $project = $factory->compileProject();
         $executor = new SchemaExecutor(project: $project, schemaResolverConfig: $this->config);
         return $executor->executeSchema(queryString: $query, variables: $variables);

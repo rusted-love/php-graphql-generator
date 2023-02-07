@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace BladL\BestGraphQL\Reflection;
 
 use BladL\BestGraphQL\Exception\ReflectionException;
+use ReflectionAttribute;
 use function count;
 
 /**
@@ -33,10 +34,10 @@ final readonly class ReflectionClass
     /**
      * @template M of object
      * @param class-string<M> $attributeClass
-     * @return \ReflectionAttribute<M>|null
+     * @return ReflectionAttribute<M>|null
      * @throws ReflectionException
      */
-    public function expectOneOrNoAttribute(string $attributeClass): ?\ReflectionAttribute
+    public function expectOneOrNoAttribute(string $attributeClass): ?ReflectionAttribute
     {
         $attributes = $this->reflection->getAttributes($attributeClass);
         if (count($attributes) > 1) {

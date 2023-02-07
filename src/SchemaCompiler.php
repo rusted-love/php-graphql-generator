@@ -4,8 +4,9 @@ declare(strict_types=1);
 namespace BladL\BestGraphQL;
 
 use BladL\BestGraphQL\Attributes\ExternalType;
+use BladL\BestGraphQL\Exception\CacheException;
+use BladL\BestGraphQL\Exception\CompilerException;
 use BladL\BestGraphQL\Exception\ReflectionException;
-use BladL\BestGraphQL\Exception\ResolverException;
 use BladL\BestGraphQL\Reflection\ReflectionClass;
 use BladL\Time\TimeInterval;
 use GraphQL\Error\SyntaxError;
@@ -25,7 +26,7 @@ use function is_array;
  * @phpstan-import-type SchemaMeta from CompiledProject
  * @internal
  */
-final class SchemaFactory
+final class SchemaCompiler
 {
     private ?Schema $schema = null;
     public function __construct(private readonly string $schemaPath, private readonly AdapterInterface $cache,private readonly SchemaResolverConfig $config, private readonly ?TimeInterval $cacheLifetime = null)
@@ -34,24 +35,22 @@ final class SchemaFactory
     }
 
     /**
-     * @throws SyntaxError
-     * @throws ReflectionException
-     * @throws ResolverException
+     * @throws CompilerException|CacheException
      */
     public function compileProject():CompiledProject {
         return new CompiledProject(meta: $this->getMeta(), schema: $this->resolveSchema(),config: $this->config);
     }
+
     /**
      * @return SchemaMeta
-     * @throws ReflectionException|SyntaxError
-     * @throws ResolverException
+     * @throws CompilerException|CacheException
      */
     private function getMeta():array
     {
         try {
             $item = $this->cache->getItem('graphql_schema_meta');
         } catch (InvalidArgumentException $e) {
-            throw new ResolverException(message: $e->getMessage(), previous: $e);
+            throw new CacheException(message: $e->getMessage(), previous: $e);
         }
         if ($item->isHit()) {
             /**
@@ -74,13 +73,21 @@ final class SchemaFactory
             $class = $this->config->typesConfig->getTypeClass($typeName);
             if (null !== $class) {
                 assert(class_exists($class));
-                $reflection = new ReflectionClass($class);
-                $attribute = $reflection->expectOneOrNoAttribute(ExternalType::class);
+                try {
+                    $reflection = new ReflectionClass($class);
+                } catch (\ReflectionException $e) {
+                    throw new CompilerException(message: $e->getMessage(), previous: $e);
+                }
+                try {
+                    $attribute = $reflection->expectOneOrNoAttribute(ExternalType::class);
+                } catch (ReflectionException $e) {
+                    throw new CompilerException(message: $e->getMessage(), previous: $e);
+                }
                 if (null !== $attribute) {
                     $args = $attribute->getArguments();
                     $class = $args['class'];
                     if (!class_exists($class)) {
-                        throw new ResolverException('Class ' . $class . ' defined in attribute not exists');
+                        throw new CompilerException('Class ' . $class . ' defined in attribute not exists');
                     }
                     $meta['externalTypes'][$class] = [
                         'typeClass' => $reflection->getClassName(),
@@ -96,8 +103,7 @@ final class SchemaFactory
         return $meta;
     }
     /**
-     * @throws SyntaxError
-     * @throws ResolverException
+     * @throws CompilerException
      */
     private function resolveSchema(): Schema
     {
@@ -107,7 +113,7 @@ final class SchemaFactory
         try {
             $item = $this->cache->getItem('graphql_schema_');
         } catch (InvalidArgumentException $e) {
-            throw new ResolverException($e->getMessage(), previous: $e);
+            throw new CompilerException($e->getMessage(), previous: $e);
         }
         if ($item->isHit()) {
             $value = $item->get();
@@ -117,11 +123,15 @@ final class SchemaFactory
         } else {
             $schemaPath = $this->schemaPath;
             if (!file_exists($schemaPath)) {
-                throw new ResolverException('Specified schema path not exists');
+                throw new CompilerException('Specified schema path not exists');
             }
             $schemaContent = file_get_contents($schemaPath);
             assert(false !== $schemaContent);
-            $document = Parser::parse($schemaContent);
+            try {
+                $document = Parser::parse($schemaContent);
+            } catch (SyntaxError $e) {
+                throw new CompilerException(message:$e->getMessage(),previous:$e);
+            }
             $item->set(AST::toArray($document))->expiresAfter($this->cacheLifetime?->getSeconds());
             $this->cache->save($item);
 

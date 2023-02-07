@@ -3,13 +3,15 @@ declare(strict_types=1);
 
 namespace BladL\BestGraphQL\Exception;
 
-
 use Throwable;
 
-final class ResolverException extends GeneralSchemaExecutionException implements GraphQLExceptionInterface
+class ClientSafeException extends \Exception implements GraphQLExceptionInterface
 {
     /**
-     * @param array<string,mixed> $extensions
+     * @param string $message
+     * @param int $code
+     * @param Throwable|null $previous
+     * @param array<string, mixed> $extensions
      */
     public function __construct(string $message, int $code = 0, ?Throwable $previous = null, private readonly array $extensions = [])
     {
@@ -18,12 +20,9 @@ final class ResolverException extends GeneralSchemaExecutionException implements
 
     public function isClientSafe(): bool
     {
-        return false;
+        return true;
     }
 
-    /**
-     * @return array<string,mixed>
-     */
     public function getExtensions(): array
     {
         return $this->extensions;

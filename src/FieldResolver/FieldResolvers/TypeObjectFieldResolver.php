@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace BladL\BestGraphQL\FieldResolver\FieldResolvers;
 
-use BladL\BestGraphQL\Exception\ResolverException;
+use BladL\BestGraphQL\Exception\FieldResolverException;
 use BladL\BestGraphQL\FieldResolver\FieldResolverInfo;
 use BladL\BestGraphQL\FieldResolver\FieldResolverAbstract;
 use BladL\BestGraphQL\Tests\Fixtures\GraphQL\Types\ProductVariantType;
@@ -26,7 +26,7 @@ final readonly class TypeObjectFieldResolver extends FieldResolverAbstract
     }
 
     /**
-     * @throws ResolverException
+     * @throws FieldResolverException
      */
     protected function proceedResolve(FieldResolverInfo $info): mixed
     {
@@ -41,7 +41,7 @@ final readonly class TypeObjectFieldResolver extends FieldResolverAbstract
         } elseif (property_exists($value, $fieldName)) {
             $value = $value->{$fieldName};
         } else {
-            throw new ResolverException("Field $fieldName not found in " . $value::class);
+            throw new FieldResolverException("Field $fieldName not found in " . $value::class);
         }
 
         return $this->formatArray($value);

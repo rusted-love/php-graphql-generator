@@ -5,11 +5,10 @@ namespace BladL\BestGraphQL\Tests;
 
 use BladL\BestGraphQL\Events\EventCollection;
 use BladL\BestGraphQL\Events\EventListenerInterface;
-use BladL\BestGraphQL\Exception\ResolverException;
+use BladL\BestGraphQL\Exception\GraphQLExceptionInterface;
 use BladL\BestGraphQL\StandardGraphQLServer;
-use BladL\BestGraphQL\SchemaFactory;
+use BladL\BestGraphQL\SchemaCompiler;
 use BladL\Time\TimeInterval;
-use GraphQL\Error\SyntaxError;
 use GraphQL\Executor\ExecutionResult;
 use GraphQL\Type\Schema;
 use Psr\Container\ContainerInterface;
@@ -35,26 +34,23 @@ final readonly class TestsHelper
                 return false;
             }
         };
-        return new StandardGraphQLServer(schemaPath: Directories::getPathFromRoot(self::SCHEMA_PATH), cache: self::getCache(), namespace: '\BladL\BestGraphQL\Tests\Fixtures\GraphQL', container: $container, cacheLifeTime: TimeInterval::second(),eventsContainer: new EventCollection());
+        return new StandardGraphQLServer(schemaPath: Directories::getPathFromRoot(self::SCHEMA_PATH), cache: self::getCache(), namespace: '\BladL\BestGraphQL\Tests\Fixtures\GraphQL', container: $container, eventsContainer: new EventCollection(), cacheLifeTime: TimeInterval::second());
 
     }
 
     /**
      * @param array<string,mixed>|null $variables
      * @param EventListenerInterface[] $listeners
+     * @throws GraphQLExceptionInterface
      */
-    public static function executeQuery(QueryForTesting $query, ?array $variables,array $listeners = []): ExecutionResult
+    public static function executeQuery(QueryForTesting $query, ?array $variables, array $listeners = []): ExecutionResult
     {
         $gql = self::getGraphQLService();
         foreach ($listeners as $listener) {
             $gql->getEvents()->add($listener);
         }
-        try {
 
-            return $gql->executeQuery(query: $query->value, variables: $variables);
-        } catch (ResolverException|SyntaxError $e) {
-            throw new UnexpectedValueException($e->getMessage(), previous: $e);
-        }
+        return $gql->executeQuery(query: $query->value, variables: $variables);
     }
 
     public const CACHE_DIR_PATH = '/tests/schema_test_output';
@@ -68,7 +64,7 @@ final readonly class TestsHelper
     }
 
     /**
-     * @throws SyntaxError|ResolverException
+     * @throws GraphQLExceptionInterface
      */
     public static function getSchema(): Schema
     {
@@ -77,7 +73,7 @@ final readonly class TestsHelper
             throw new UnexpectedValueException('No schema fixture');
         }
         $config = self::getGraphQLService()->getConfig();
-        $generator = new SchemaFactory(schemaPath: $schemaContent, cache: self::getCache(), config: $config);
+        $generator = new SchemaCompiler(schemaPath: $schemaContent, cache: self::getCache(), config: $config);
         return $generator->compileProject()->getSchema();
     }
 

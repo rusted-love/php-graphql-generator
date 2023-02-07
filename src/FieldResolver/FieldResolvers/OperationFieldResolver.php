@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace BladL\BestGraphQL\FieldResolver\FieldResolvers;
 
-use BladL\BestGraphQL\Exception\ResolverException;
+use BladL\BestGraphQL\Exception\FieldResolverException;
 use BladL\BestGraphQL\FieldResolver\FieldResolverInfo;
 use BladL\BestGraphQL\FieldResolver\FieldResolverAbstract;
 use function call_user_func_array;
@@ -21,7 +21,7 @@ final readonly class OperationFieldResolver extends FieldResolverAbstract
     }
 
     /**
-     * @throws ResolverException
+     * @throws FieldResolverException
      */
     protected function proceedResolve(FieldResolverInfo $info): mixed
     {
@@ -29,7 +29,7 @@ final readonly class OperationFieldResolver extends FieldResolverAbstract
         $parentTypeName = $info->getParentTypeName();
         $class = $this->schemaResolverConfig->operationConfig->getResolverClass(operationName: $parentTypeName, fieldName: $fieldName);
         if (null === $class) {
-            throw new ResolverException("Class for $parentTypeName not exist");
+            throw new FieldResolverException("Class for $parentTypeName not exist");
         }
         \assert(\class_exists($class));
         $resolver = $this->schemaResolverConfig->getService($class);
@@ -38,6 +38,6 @@ final readonly class OperationFieldResolver extends FieldResolverAbstract
             return call_user_func_array([$resolver, 'resolve'], $info->args);
         }
 
-        throw new ResolverException("Field $fieldName not found in class $class");
+        throw new FieldResolverException("Field $fieldName not found in class $class");
     }
 }

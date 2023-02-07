@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace BladL\BestGraphQL\Tests\EndToEnd;
 
-use BladL\BestGraphQL\Exception\ResolverException;
+use BladL\BestGraphQL\Exception\FieldResolverException;
 use BladL\BestGraphQL\Tests\TestsHelper;
 use BladL\BestGraphQL\Tests\QueryForTesting;
 use GraphQL\Error\SyntaxError;
@@ -14,7 +14,7 @@ final class SchemaExecutionTest extends TestCase
 
     /**
      * @throws SyntaxError
-     * @throws ResolverException
+     * @throws FieldResolverException
      */
     public function testProductAuthorRolesResult(): void
     {

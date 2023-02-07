@@ -6,7 +6,7 @@ namespace BladL\BestGraphQL;
 use BladL\BestGraphQL\Configuration\OperationConfig;
 use BladL\BestGraphQL\Configuration\TypesConfig;
 use BladL\BestGraphQL\Events\EventCollection;
-use BladL\BestGraphQL\Exception\ResolverException;
+use BladL\BestGraphQL\Exception\FieldResolverException;
 use BladL\BestGraphQL\FieldResolver\FieldResolverCollection;
 use BladL\BestGraphQL\FieldResolver\FieldResolvers\ExternalTypeObjectFieldResolver;
 use BladL\BestGraphQL\FieldResolver\FieldResolvers\ListFieldResolver;
@@ -17,6 +17,7 @@ use League\Container\ReflectionContainer;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use function is_object;
 
 /**
  * @internal
@@ -52,10 +53,10 @@ final readonly class SchemaResolverConfig
 
 
     /**
-     * @throws ResolverException
-     * @template T of object
      * @param class-string<T> $class
      * @return T
+     *@throws FieldResolverException
+     * @template T of object
      */
     public function getService(string $class): object
     {
@@ -63,17 +64,17 @@ final readonly class SchemaResolverConfig
         try {
             $obj =  $this->container->get($class);
         } catch (NotFoundExceptionInterface $e) {
-            throw new ResolverException("Entry $class not found in container", previous: $e);
+            throw new FieldResolverException("Entry $class not found in container", previous: $e);
 
         } catch (ContainerExceptionInterface $e) {
-            throw new ResolverException('Failed to inject ' . $class, previous: $e);
+            throw new FieldResolverException('Failed to inject ' . $class, previous: $e);
 
         }
-        if (!\is_object($obj)) {
-            throw new ResolverException("Container returned non object for $class");
+        if (!is_object($obj)) {
+            throw new FieldResolverException("Container returned non object for $class");
         }
         if (!$obj instanceof $class) {
-            throw new ResolverException("Container expected to return object of class $class. But returned ".$obj::class. ' instead');
+            throw new FieldResolverException("Container expected to return object of class $class. But returned ".$obj::class. ' instead');
         }
         return $obj;
 
