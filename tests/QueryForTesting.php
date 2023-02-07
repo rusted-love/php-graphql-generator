@@ -6,12 +6,16 @@ namespace BladL\BestGraphQL\Tests;
 enum QueryForTesting:string
 {
    case BasicProducts = <<<GRAPHQL
+fragment ProductData on Product {
+    id
+    author {
+       roles
+    }
+}
 query test1 {
     products(searchString:"best shoes") {
-        id
-        author {
-           roles
-        }
+        ...ProductData
+       
     }
 }
 GRAPHQL;
