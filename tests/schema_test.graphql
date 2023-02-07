@@ -55,11 +55,12 @@ input ProductDataInput {
     price:MoneyInput
 
 }
-directive @access(roles: [Role!]!) on FIELD_DEFINITION|OBJECT|ARGUMENT_DEFINITION|INPUT_FIELD_DEFINITION|INPUT_OBJECT
-type AccessTest @access(roles: [Manager]) {
+directive @access(roles: [Role!]!) repeatable on FIELD_DEFINITION|OBJECT|ARGUMENT_DEFINITION|INPUT_FIELD_DEFINITION|INPUT_OBJECT
+type AccessTest @access(roles: [Manager])   {
 
     forDev:Int! @access(roles: [Developer])
     forAdmin:Int! @access(roles: [Admin])
+    testRepeatable: Int! @access(roles: [Developer])  @access(roles: [Manager]) @access(roles: [Admin])
 
 }
 input AccessInput @access(roles: [Manager]) {

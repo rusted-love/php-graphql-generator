@@ -45,4 +45,11 @@ abstract class SchemaExecuteTestCase extends TestCase
     {
         self::assertEquals([], self::checkDiffMulti($array1, $array2));
     }
+    /**
+     * @param array<int|string,mixed> $expectedResult
+     */
+    public static function assertResultIs(mixed $data,array $expectedResult):void{
+        self::assertIsArray($data);
+        self::assertArrayIdentical($data,$expectedResult);
+    }
 }

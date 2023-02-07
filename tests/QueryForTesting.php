@@ -89,7 +89,7 @@ query test1 {
 GRAPHQL;
     case TestFieldAccess = <<<GRAPHQL
 mutation test1 {
-    typeAccessTest{forDev,forAdmin}
+    typeAccessTest{forDev,forAdmin,testRepeatable}
 }
 GRAPHQL;
 }
