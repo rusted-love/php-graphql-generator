@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace BladL\BestGraphQL\Tests\Fixtures\App\GraphQLExtension;
 
 use BladL\BestGraphQL\Events\BeforeFieldResolvedListenerInterface;
-use BladL\BestGraphQL\FieldResolver\FieldResolverInfo;
+use BladL\BestGraphQL\FieldResolver\FieldResolverArguments;
 use BladL\BestGraphQL\Tests\Fixtures\App\Exception\AuthException;
 use BladL\BestGraphQL\Tests\Fixtures\GraphQL\Types\RoleEnum;
 use GraphQL\Language\AST\ArgumentNode;
@@ -81,7 +81,7 @@ final class SecurityEventHookExample implements BeforeFieldResolvedListenerInter
     /**
      * @throws AuthException
      */
-    public function beforeFieldResolve(FieldResolverInfo $info): void
+    public function beforeFieldResolve(FieldResolverArguments $info): void
     {
 
         $parentNode = $info->info->parentType->astNode;

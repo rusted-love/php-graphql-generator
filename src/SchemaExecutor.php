@@ -5,7 +5,7 @@ namespace BladL\BestGraphQL;
 
 use BladL\BestGraphQL\Exception\ClientSafeException;
 use BladL\BestGraphQL\Exception\ClientUnsafeException;
-use BladL\BestGraphQL\FieldResolver\FieldResolverInfo;
+use BladL\BestGraphQL\FieldResolver\FieldResolverArguments;
 use GraphQL\Executor\ExecutionResult;
 use GraphQL\GraphQL;
 use GraphQL\Type\Definition\ResolveInfo;
@@ -31,7 +31,7 @@ final readonly class SchemaExecutor
          */
         $resolver = static function (mixed $objectValue, array $args, mixed $contextValue, ResolveInfo $info) use ($config,$project): mixed {
 
-            $resolverInput = new FieldResolverInfo(
+            $resolverInput = new FieldResolverArguments(
                 objectValue: $objectValue, args: $args, contextValue: $contextValue, info: $info
             );
             $config->events->executeBeforeFieldListener($resolverInput);

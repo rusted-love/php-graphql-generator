@@ -7,7 +7,7 @@ use GraphQL\Type\Definition\ResolveInfo;
 /**
  * @internal
  */
-final readonly class FieldResolverInfo
+final readonly class FieldResolverArguments
 {
     /**
      * @param mixed $objectValue

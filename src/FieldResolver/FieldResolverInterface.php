@@ -6,6 +6,6 @@ namespace BladL\BestGraphQL\FieldResolver;
 interface FieldResolverInterface
 {
 
-    public function supports(FieldResolverInfo $info):bool;
-    public function resolve(FieldResolverInfo $info):mixed;
+    public function supports(FieldResolverArguments $info):bool;
+    public function resolve(FieldResolverArguments $info):mixed;
 }

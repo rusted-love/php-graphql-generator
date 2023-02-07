@@ -16,7 +16,7 @@ final readonly class FieldResolverCollection
     {
     }
 
-    public function resolveField(FieldResolverInfo $info): FieldResolverResult
+    public function resolveField(FieldResolverArguments $info): FieldResolverResult
     {
         foreach ($this->serializers as $serializer) {
             if ($serializer->supports($info)) {

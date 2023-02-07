@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace BladL\BestGraphQL\FieldResolver\FieldResolvers;
 
 use BladL\BestGraphQL\Exception\FieldResolverException;
-use BladL\BestGraphQL\FieldResolver\FieldResolverInfo;
+use BladL\BestGraphQL\FieldResolver\FieldResolverArguments;
 use BladL\BestGraphQL\FieldResolver\FieldResolverAbstract;
 use BladL\BestGraphQL\Tests\Fixtures\GraphQL\Types\ProductVariantType;
 use BladL\BestGraphQL\Utils;
@@ -20,7 +20,7 @@ use function is_object;
 final readonly class TypeObjectFieldResolver extends FieldResolverAbstract
 {
 
-    public function supports(FieldResolverInfo $info): bool
+    public function supports(FieldResolverArguments $info): bool
     {
         return is_object($info->objectValue) && $this->project->getConfig()->typesConfig->isTypeClassExists($info->getParentTypeName()) && !$this->project->isExternalObject($info->objectValue);
     }
@@ -28,7 +28,7 @@ final readonly class TypeObjectFieldResolver extends FieldResolverAbstract
     /**
      * @throws FieldResolverException
      */
-    protected function proceedResolve(FieldResolverInfo $info): mixed
+    protected function proceedResolve(FieldResolverArguments $info): mixed
     {
         $fieldName = $info->getFieldName();
         $value = $info->objectValue;

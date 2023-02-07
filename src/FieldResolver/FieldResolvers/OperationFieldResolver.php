@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace BladL\BestGraphQL\FieldResolver\FieldResolvers;
 
 use BladL\BestGraphQL\Exception\FieldResolverException;
-use BladL\BestGraphQL\FieldResolver\FieldResolverInfo;
+use BladL\BestGraphQL\FieldResolver\FieldResolverArguments;
 use BladL\BestGraphQL\FieldResolver\FieldResolverAbstract;
 use function call_user_func_array;
 
@@ -14,7 +14,7 @@ use function call_user_func_array;
 final readonly class OperationFieldResolver extends FieldResolverAbstract
 {
 
-    public function supports(FieldResolverInfo $info): bool
+    public function supports(FieldResolverArguments $info): bool
     {
         $parentTypeName = $info->getParentTypeName();
         return 'Query' === $parentTypeName || 'Mutation' === $parentTypeName || 'Subscription' === $parentTypeName;
@@ -23,7 +23,7 @@ final readonly class OperationFieldResolver extends FieldResolverAbstract
     /**
      * @throws FieldResolverException
      */
-    protected function proceedResolve(FieldResolverInfo $info): mixed
+    protected function proceedResolve(FieldResolverArguments $info): mixed
     {
         $fieldName = $info->getFieldName();
         $parentTypeName = $info->getParentTypeName();

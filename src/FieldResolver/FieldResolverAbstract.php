@@ -26,12 +26,12 @@ abstract readonly class FieldResolverAbstract implements FieldResolverInterface
         $this->schemaResolverConfig = $project->getConfig();
     }
 
-    abstract protected function proceedResolve(FieldResolverInfo $info): mixed;
+    abstract protected function proceedResolve(FieldResolverArguments $info): mixed;
 
     /**
      * @throws FieldResolverException
      */
-    public function resolve(FieldResolverInfo $info): mixed
+    public function resolve(FieldResolverArguments $info): mixed
     {
         if (!$this->supports($info)) {
             throw new FieldResolverException('Field not supported for type mapper ' . static::class);

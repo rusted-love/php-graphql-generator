@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace BladL\BestGraphQL\Events;
 
-use BladL\BestGraphQL\FieldResolver\FieldResolverInfo;
+use BladL\BestGraphQL\FieldResolver\FieldResolverArguments;
 use BladL\BestGraphQL\FieldResolver\FieldResolverResult;
 use function array_filter;
 
@@ -22,7 +22,7 @@ final class EventCollection
     /**
      * @internal
      */
-    public function executeBeforeFieldListener(FieldResolverInfo $info):void {
+    public function executeBeforeFieldListener(FieldResolverArguments $info):void {
        foreach ($this->events as $listener) {
          if ($listener instanceof BeforeFieldResolvedListenerInterface) {
              $listener->beforeFieldResolve($info);

@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace BladL\BestGraphQL\Events;
 
-use BladL\BestGraphQL\FieldResolver\FieldResolverInfo;
+use BladL\BestGraphQL\FieldResolver\FieldResolverArguments;
 
 interface BeforeFieldResolvedListenerInterface  extends EventListenerInterface
 {
-    public function beforeFieldResolve(FieldResolverInfo $info):void;
+    public function beforeFieldResolve(FieldResolverArguments $info):void;
 }

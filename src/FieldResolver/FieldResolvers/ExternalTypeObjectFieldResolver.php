@@ -5,7 +5,7 @@ namespace BladL\BestGraphQL\FieldResolver\FieldResolvers;
 
 use BladL\BestGraphQL\Exception\FieldResolverException;
 use BladL\BestGraphQL\FieldResolver\FieldResolverAbstract;
-use BladL\BestGraphQL\FieldResolver\FieldResolverInfo;
+use BladL\BestGraphQL\FieldResolver\FieldResolverArguments;
 use ReflectionException;
 use ReflectionMethod;
 
@@ -15,7 +15,7 @@ readonly class  ExternalTypeObjectFieldResolver extends FieldResolverAbstract
     /**
      * @throws FieldResolverException
      */
-    protected function proceedResolve(FieldResolverInfo $info): mixed
+    protected function proceedResolve(FieldResolverArguments $info): mixed
     {
         $objectValue = $info->objectValue;
         \assert(\is_object($objectValue));
@@ -57,7 +57,7 @@ readonly class  ExternalTypeObjectFieldResolver extends FieldResolverAbstract
         return $args;
     }
 
-    public function supports(FieldResolverInfo $info): bool
+    public function supports(FieldResolverArguments $info): bool
     {
         return \is_object($info->objectValue) && $this->project->isExternalObject($info->objectValue);
     }
