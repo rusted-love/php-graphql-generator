@@ -36,8 +36,8 @@ final class ErrorsTest extends TestCase
             'search' => 'me'
         ]);
         self::assertIsArray($result->data);
-        self::assertArrayHasKey('products', $result->data);
-        $products = $result->data['products'];
+        self::assertArrayHasKey('productsSearchResult', $result->data);
+        $products = $result->data['productsSearchResult'];
         self::assertIsArray($products);
         self::assertEquals('product_1', $products[0]['id'] ?? '');
 

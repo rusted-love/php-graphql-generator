@@ -21,7 +21,7 @@ query test1 {
 GRAPHQL;
     case ProductSearchString = <<<GRAPHQL
 query test1(\$search:String!) {
-    products(searchString:\$search) {
+    productsSearchResult:products(searchString:\$search) {
         id
         author {
            roles
@@ -85,6 +85,11 @@ query test1 {
             }
         }
     }
+}
+GRAPHQL;
+    case TestFieldAccess = <<<GRAPHQL
+mutation test1 {
+    typeAccessTest{forDev,forAdmin}
 }
 GRAPHQL;
 }

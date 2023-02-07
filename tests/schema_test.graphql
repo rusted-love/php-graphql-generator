@@ -10,13 +10,15 @@ type User {
 }
 type ProductVariant {
     id:ID!
+
 }
 type Product {
     id:ID!
     title:String!
-    author:User
+    author:User @access(roles: [Manager])
     variants(available:Boolean = true):[ProductVariant!]!
     wrongVariantReturnValue(available:Boolean = true):ProductVariant
+
 
 }
 type Money {
@@ -53,9 +55,21 @@ input ProductDataInput {
     price:MoneyInput
 
 }
-directive @access(roles: [Role!]!) on FIELD_DEFINITION
+directive @access(roles: [Role!]!) on FIELD_DEFINITION|OBJECT|ARGUMENT_DEFINITION|INPUT_FIELD_DEFINITION|INPUT_OBJECT
+type AccessTest @access(roles: [Manager]) {
+
+    forDev:Int! @access(roles: [Developer])
+    forAdmin:Int! @access(roles: [Admin])
+
+}
+input AccessInput @access(roles: [Manager]) {
+    something:Int! @access(roles: [Developer])
+}
 
 type Mutation {
+    argumentAccessTest(arg:String! @access(roles: [Admin])):Int!
+    typeAccessTest:AccessTest
+    inputObjectAccessTest(arg:AccessInput!):Int!
 
     updateProduct(product:ProductInput!,data:ProductDataInput!): Product!   @access(roles: [Manager])
 
