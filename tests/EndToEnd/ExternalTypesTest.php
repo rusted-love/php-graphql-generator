@@ -18,7 +18,7 @@ final class ExternalTypesTest extends SchemaExecuteTestCase
         $data = $result->data;
         foreach ($listener->log as $item) {
 
-            if ('Order' === $item->resolverInfo->getParentTypeName()) {
+            if ('Order' === $item->resolverArguments->getParentTypeName()) {
                 self::assertInstanceOf(ExternalTypeObjectFieldResolver::class,$item->usedSerializer);
             }
         }

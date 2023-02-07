@@ -21,12 +21,12 @@ final readonly class FieldResolverCollection
         foreach ($this->serializers as $serializer) {
             if ($serializer->supports($info)) {
                 return new FieldResolverResult(
-                    resultValue: $serializer->resolve($info), usedSerializer: $serializer, resolverInfo: $info
+                    resultValue: $serializer->resolve($info), usedSerializer: $serializer, resolverArguments: $info
                 );
             }
         }
         return new FieldResolverResult(
-            resultValue: $info->objectValue, usedSerializer: null, resolverInfo: $info
+            resultValue: $info->objectValue, usedSerializer: null, resolverArguments: $info
         );
     }
 }

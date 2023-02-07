@@ -21,7 +21,7 @@ final class SerializersTest extends TestCase
 
         $productLog = null;
         foreach ($listener->log as $item) {
-            $info = $item->resolverInfo->info;
+            $info = $item->resolverArguments->info;
             if ('Product' === $info->parentType->name && 'id' === $info->fieldName) {
                 $productLog = $item;
                 break;
@@ -31,7 +31,7 @@ final class SerializersTest extends TestCase
         self::assertEquals('product_1', $productLog->resultValue);
         $roleEnumLog = null;
         foreach ($listener->log as $item) {
-            if ('[Role!]' === $item->resolverInfo->info->returnType->toString()) {
+            if ('[Role!]' === $item->resolverArguments->info->returnType->toString()) {
                 $roleEnumLog = $item;
                 break;
             }
