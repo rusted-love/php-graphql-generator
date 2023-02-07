@@ -4,9 +4,6 @@ declare(strict_types=1);
 namespace BladL\BestGraphQL\FieldResolver;
 
 use GraphQL\Type\Definition\ResolveInfo;
-/**
- * @internal
- */
 final readonly class FieldResolverArguments
 {
     /**
