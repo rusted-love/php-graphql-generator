@@ -4,17 +4,18 @@ declare(strict_types=1);
 namespace BladL\BestGraphQL\Tests\EndToEnd;
 
 use BladL\BestGraphQL\Exception\FieldResolverException;
+use BladL\BestGraphQL\Exception\GraphQLExceptionInterface;
 use BladL\BestGraphQL\Tests\TestsHelper;
 use BladL\BestGraphQL\Tests\QueryForTesting;
 use GraphQL\Error\SyntaxError;
 use PHPUnit\Framework\TestCase;
 
-final class SchemaExecutionTest extends TestCase
+final class SchemaExecutionTest extends EndToEndTestCase
 {
 
+
     /**
-     * @throws SyntaxError
-     * @throws FieldResolverException
+     * @throws GraphQLExceptionInterface
      */
     public function testProductAuthorRolesResult(): void
     {

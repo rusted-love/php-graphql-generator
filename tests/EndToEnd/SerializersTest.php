@@ -3,21 +3,23 @@ declare(strict_types=1);
 
 namespace BladL\BestGraphQL\Tests\EndToEnd;
 
+use BladL\BestGraphQL\Exception\GraphQLExceptionInterface;
 use BladL\BestGraphQL\Tests\QueryForTesting;
 use BladL\BestGraphQL\Tests\SimpleResolverResultListener;
-use BladL\BestGraphQL\Tests\TestsHelper;
-use PHPUnit\Framework\TestCase;
 
-final class SerializersTest extends TestCase
+final class SerializersTest extends EndToEndTestCase
 {
 
+    /**
+     * @throws GraphQLExceptionInterface
+     */
     public function testProductFixtureSerializer(): void
     {
         $listener = new SimpleResolverResultListener();
-       $result =  TestsHelper::executeQuery(
-            query: QueryForTesting::BasicProducts, variables: null,listeners:[$listener]
+        $result = self::executeQuery(
+            query: QueryForTesting::BasicProducts, variables: null, listeners: [$listener]
         );
-       self::assertCount(0,$result->errors);
+        self::assertCount(0, $result->errors);
 
         $productLog = null;
         foreach ($listener->log as $item) {
@@ -36,9 +38,9 @@ final class SerializersTest extends TestCase
                 break;
             }
         }
-        self::assertNotNull($roleEnumLog,'roles was not serialized');
+        self::assertNotNull($roleEnumLog, 'roles was not serialized');
         $resultValue = $roleEnumLog->resultValue;
         self::assertIsArray($resultValue);
-        self::assertEquals('Admin',$resultValue[0]??null);
+        self::assertEquals('Admin', $resultValue[0] ?? null);
     }
 }

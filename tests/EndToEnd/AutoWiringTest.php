@@ -4,13 +4,12 @@ declare(strict_types=1);
 namespace BladL\BestGraphQL\Tests\EndToEnd;
 
 use BladL\BestGraphQL\Exception\FieldResolverException;
-use BladL\BestGraphQL\Tests\TestsHelper;
+use BladL\BestGraphQL\Exception\GraphQLExceptionInterface;
 use BladL\BestGraphQL\Tests\Fixtures\GraphQL\Resolvers\ProductsQueryResolver;
 use BladL\BestGraphQL\Tests\QueryForTesting;
-use PHPUnit\Framework\TestCase;
+use BladL\BestGraphQL\Tests\TestsHelper;
 
-final class
-AutoWiringTest extends TestCase
+final class AutoWiringTest extends EndToEndTestCase
 {
     /**
      * @throws FieldResolverException
@@ -28,6 +27,9 @@ AutoWiringTest extends TestCase
             $resolver2->service);
     }
 
+    /**
+     * @throws GraphQLExceptionInterface
+     */
     public function testMethodAutoWiring(): void
     {
         $result = TestsHelper::executeQuery(query: QueryForTesting::ProductWithVariants, variables: [
@@ -45,11 +47,15 @@ AutoWiringTest extends TestCase
 
     }
 
-    public function testInvalidReturnedValue():void {
+    /**
+     * @throws GraphQLExceptionInterface
+     */
+    public function testInvalidReturnedValue(): void
+    {
         $result = TestsHelper::executeQuery(query: QueryForTesting::ProductWithVariantsWrongReturnValue, variables: [
             'available' => false
         ]);
         self::assertCount(1, $result->errors);
-        self::assertEquals('Invalid value returned in product->wrongVariantReturnValue->id:ID! received array',$result->errors[0]->getMessage());
+        self::assertEquals('Invalid value returned in product->wrongVariantReturnValue->id:ID! received array', $result->errors[0]->getMessage());
     }
 }

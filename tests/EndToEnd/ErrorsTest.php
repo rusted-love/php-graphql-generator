@@ -1,25 +1,35 @@
 <?php
+declare(strict_types=1);
 
 namespace BladL\BestGraphQL\Tests\EndToEnd;
 
+use BladL\BestGraphQL\Exception\GraphQLExceptionInterface;
 use BladL\BestGraphQL\Tests\TestsHelper;
 use BladL\BestGraphQL\Tests\QueryForTesting;
-use PHPUnit\Framework\TestCase;
 
-final class ErrorsTest extends TestCase
+final class ErrorsTest extends EndToEndTestCase
 {
+    /**
+     * @throws GraphQLExceptionInterface
+     */
     public function testWrongArgument(): void
     {
         $result = TestsHelper::executeQuery(query: QueryForTesting::WrongArguments, variables: null);
         self::assertEquals('Unknown argument "searchStrings" on field "products" of type "Query". Did you mean "searchString"?', $result->errors[0]->getMessage());
     }
 
+    /**
+     * @throws GraphQLExceptionInterface
+     */
     public function testWrongField(): void
     {
         $result = TestsHelper::executeQuery(query: QueryForTesting::WrongProductFields, variables: null);
         self::assertEquals('Cannot query field "ide" on type "Product". Did you mean "id"?', $result->errors[0]->getMessage());
     }
 
+    /**
+     * @throws GraphQLExceptionInterface
+     */
     public function testWrongVariables(): void
     {
         $result = TestsHelper::executeQuery(query: QueryForTesting::ProductSearchString, variables: null);

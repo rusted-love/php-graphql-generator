@@ -3,14 +3,17 @@ declare(strict_types=1);
 
 namespace BladL\BestGraphQL\Tests\EndToEnd;
 
+use BladL\BestGraphQL\Exception\GraphQLExceptionInterface;
 use BladL\BestGraphQL\FieldResolver\FieldResolvers\ExternalTypeObjectFieldResolver;
 use BladL\BestGraphQL\Tests\QueryForTesting;
-use BladL\BestGraphQL\Tests\SchemaExecuteTestCase;
 use BladL\BestGraphQL\Tests\SimpleResolverResultListener;
 use BladL\BestGraphQL\Tests\TestsHelper;
 
-final class ExternalTypesTest extends SchemaExecuteTestCase
+final class ExternalTypesTest extends EndToEndTestCase
 {
+    /**
+     * @throws GraphQLExceptionInterface
+     */
     public function testExpectedBehaviour(): void
     {
         $listener =new SimpleResolverResultListener();

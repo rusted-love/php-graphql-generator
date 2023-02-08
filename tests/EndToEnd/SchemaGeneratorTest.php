@@ -3,16 +3,15 @@ declare(strict_types=1);
 
 namespace BladL\BestGraphQL\Tests\EndToEnd;
 
+use BladL\BestGraphQL\Exception\GraphQLExceptionInterface;
 use BladL\BestGraphQL\Tests\TestsHelper;
-use GraphQL\Error\SyntaxError;
-use PHPUnit\Framework\TestCase;
 
-final class SchemaGeneratorTest extends TestCase
+final class SchemaGeneratorTest extends EndToEndTestCase
 {
 
 
     /**
-     * @throws SyntaxError
+     * @throws GraphQLExceptionInterface
      */
     public function testSchemaParserValidity(): void
     {
